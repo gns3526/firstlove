@@ -1,0 +1,53 @@
+/* The title uses the viewport; the story keeps its native portrait stage. */
+body.firstlove-active{background:#eaf4f7}
+body.firstlove-active #rotatehint{display:none!important}
+.firstlove-title{position:fixed;inset:0;z-index:10010;overflow:hidden;background:#eaf4f7;color:#29445b;font-family:var(--f-body);isolation:isolate}
+.firstlove-title[hidden]{display:none!important}
+.firstlove-title *{box-sizing:border-box}
+.firstlove-picture,.firstlove-art{position:absolute;inset:0;width:100%;height:100%;display:block}
+.firstlove-art{object-fit:cover;object-position:center top;pointer-events:none}
+.firstlove-content{position:absolute;left:3vw;top:50%;transform:translateY(-50%);width:25vw;max-width:400px}
+.firstlove-heading{margin:0;width:100%;line-height:0}
+.firstlove-logo{display:block;width:100%;height:auto;max-height:32vh;object-fit:contain}
+.firstlove-menu{display:flex;flex-direction:column;gap:12px;width:min(100%,310px);margin:clamp(22px,4vh,48px) auto 0}
+.firstlove-button{appearance:none;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:52px;padding:13px 20px;border:1px solid #a9c5d4;border-radius:14px;background:#fffdf4ed;color:#304b61;font:600 18px/1.35 var(--f-body);letter-spacing:.015em;box-shadow:0 4px 14px #52768f19;cursor:pointer;transition:background .15s,transform .15s,box-shadow .15s}
+.firstlove-button:hover:not(:disabled){background:#fffefa;transform:translateY(-2px);box-shadow:0 7px 20px #52768f2b}
+.firstlove-button:active:not(:disabled){transform:translateY(0)}
+.firstlove-button:focus-visible{outline:3px solid #377cad;outline-offset:4px}
+.firstlove-button:disabled{background:#edf1f1de;border-color:#c6d4d9;color:#8999a3;cursor:default;box-shadow:none}
+.firstlove-primary{background:#f4b6c7f5;border-color:#dc99af;color:#513d4b}
+.firstlove-primary:hover:not(:disabled){background:#ffcbd8}
+.firstlove-save-date{font-size:12px;font-weight:400;color:#617f93}
+.firstlove-feedback{margin:0;min-height:0;text-align:center;font-size:13px;line-height:1.5;color:#765665}
+.firstlove-feedback:empty{display:none}
+.firstlove-confirm-backdrop{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;padding:24px;background:#294a6480}
+.firstlove-confirm{width:min(440px,100%);padding:30px;border:1px solid #d5e4e8;border-radius:22px;background:#fffdf7;color:#29445b;box-shadow:0 20px 80px #193a5952}
+.firstlove-confirm h2{margin:0 0 16px;font-size:23px;font-weight:700;line-height:1.4;letter-spacing:-.03em}
+.firstlove-confirm p{margin:0;font-size:16px;line-height:1.85;word-break:keep-all}
+.firstlove-confirm-actions{display:flex;gap:12px;margin-top:26px}
+.firstlove-confirm-actions .firstlove-button{font-size:16px;min-height:48px}
+@media(max-aspect-ratio:1/1){
+ .firstlove-content{position:static;transform:none;width:auto}
+ .firstlove-heading{position:absolute;left:50%;top:calc(2vh + env(safe-area-inset-top,0px));transform:translateX(-50%);width:min(66vw,380px)}
+ .firstlove-logo{max-height:10vh;max-height:10svh}
+ .firstlove-menu{position:absolute;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(76vw,340px);margin:0;gap:10px}
+ .firstlove-button{min-height:48px;font-size:17px;padding:12px 18px}
+}
+@media(max-aspect-ratio:1/1) and (max-height:700px){
+ .firstlove-heading{top:calc(10px + env(safe-area-inset-top,0px));width:min(58vw,300px)}
+ .firstlove-logo{max-height:10vh;max-height:10svh}
+ .firstlove-menu{bottom:calc(14px + env(safe-area-inset-bottom,0px));gap:8px}
+ .firstlove-button{min-height:43px;padding:10px 18px;font-size:16px}
+}
+@media(min-aspect-ratio:1/1) and (max-height:560px){
+ .firstlove-content{left:3vw;width:25vw}
+ .firstlove-logo{max-height:29vh}
+ .firstlove-menu{margin-top:16px;gap:8px}
+ .firstlove-button{min-height:40px;padding:8px 14px;font-size:15px}
+ .firstlove-save-date{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.firstlove-button{transition:none}}
+
+/* Centered confirmation copy */
+.firstlove-confirm h2,.firstlove-confirm p{text-align:center}
+.firstlove-confirm-actions{justify-content:center}

@@ -1,0 +1,67 @@
+/* The key filter always remains in the chain. Only the two entrance values
+   animate, so keyed green plates cannot flash through brightness/blur changes. */
+@property --character-enter-light {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+@property --character-enter-blur {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+#layer_chars img.spr[data-character-effects][src],
+.after-reader img.after-figure[data-character-effects] {
+  --character-key-filter: brightness(1);
+  --character-base-light: 1;
+  --character-base-blur: 0px;
+  filter: var(--character-key-filter)
+    brightness(calc(var(--character-base-light) * var(--character-enter-light)))
+    blur(calc(var(--character-base-blur) + var(--character-enter-blur)))
+    drop-shadow(0 3px 7px rgb(13 28 42 / 16%));
+}
+#layer_chars img.spr[data-character-effects][src*="cinemaKey=v16"],
+.after-reader img.after-figure[data-character-effects][src*="cinemaKey=v16"] {
+  --character-key-filter: url(#cinema-v16-key);
+}
+#layer_chars img.spr[data-character-effects][src*="cinemaKey=v16"][src*="keyProfile=paint"],
+.after-reader img.after-figure[data-character-effects][src*="cinemaKey=v16"][src*="keyProfile=paint"] {
+  --character-key-filter: url(#cinema-v16-key-paint);
+}
+#layer_chars img.spr[data-character-effects].dimmed { --character-base-light: .62; }
+#layer_chars img.spr[data-character-effects].sil {
+  --character-base-light: 0;
+  --character-base-blur: 2px;
+}
+/* Do not let the renderer's filter transition chase every animation sample. */
+#layer_chars img.spr[data-character-entering],
+.after-reader img.after-figure[data-character-entering] {
+  transition-property: opacity, transform;
+}
+#layer_chars img.spr[data-character-waiting],
+.after-reader img.after-figure[data-character-waiting] { opacity: 0; }
+
+/* Keep the illustration clean at every stage scale: scanlines produced moire
+   on faces and clothing, especially on narrow/mobile viewports. */
+#layer_chars:has(img.spr)::after,
+.after-reader > .after-bg::after,
+.r60-visual::after {
+  content: none;
+}
+/* after-bg is already behind both the figure and dialogue. The canvas reader
+   keeps its notice and controls above the art-only overlay. */
+.r60-visual > .r60-notice { z-index: 1; }
+.r60-visual::after { z-index: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  #layer_chars img.spr[data-character-effects],
+  .after-reader img.after-figure[data-character-effects] {
+    --character-enter-light: 1;
+    --character-enter-blur: 0px;
+    transition: none;
+  }
+  #layer_chars::after,
+  .after-reader > .after-bg::after,
+  .r60-visual::after { display: none; }
+}

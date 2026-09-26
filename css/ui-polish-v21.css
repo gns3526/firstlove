@@ -1,0 +1,51 @@
+/* UI-only touch, typography and icon polish. The game stage remains 720 × 1280. */
+#stage { --ui-hit:82px; }
+.ui-v21-icon { display:inline-block; width:30px; height:30px; flex:none; vertical-align:middle; }
+#layer_screen .ui-v21-heading-icon { width:36px; height:36px; margin-right:12px; }
+#layer_screen .ui-v21-app .ic,
+#layer_screen .ui-v21-app .ic.light { background:#f9f9f1; border-color:#b2ccc7; box-shadow:0 5px 0 #193b4833,0 7px 14px #172e4333; color:#355765; }
+#layer_screen .ui-v21-app .ui-v21-app-icon { width:60px; height:60px; }
+#layer_screen .ui-v21-app .badge { z-index:1; }
+#stage [data-ui-v21-control]:focus-visible,
+#stage .ph-btn:focus-visible,
+#stage .gm-pinbody:focus-visible,
+#stage .gm-btn:focus-visible,
+#stage .gm-x:focus-visible { outline:4px solid #f4c467; outline-offset:5px; }
+#layer_screen .hdr .x,
+#layer_screen .hdr .back { width:var(--ui-hit); height:var(--ui-hit); top:0; padding:calc((var(--ui-hit) - 44px)/2); box-sizing:border-box; object-fit:contain; }
+#layer_screen .hdr .x { right:0; }
+#layer_screen .hdr .back { left:0; }
+#layer_screen .ib-hd img { width:var(--ui-hit); height:var(--ui-hit); top:0; right:0; padding:calc((var(--ui-hit) - 44px)/2); box-sizing:border-box; object-fit:contain; }
+#layer_screen .buypanel>.closex { height:var(--ui-hit); bottom:2px; }
+#layer_screen .buytabs { height:var(--ui-hit); }
+#layer_screen .buygrid { top:calc(108px + var(--ui-hit)); height:calc(668px - var(--ui-hit)); }
+#layer_screen .hub-tab { min-height:var(--ui-hit); }
+#layer_screen .ui-v21-settings .set-row { min-height:var(--ui-hit); }
+#layer_screen .ui-v21-settings .set-row:first-child { flex-wrap:wrap; gap:10px 12px; margin-bottom:8px; }
+#layer_screen .ui-v21-settings .set-row:first-child .ct { width:100%; }
+#layer_screen .ui-v21-settings .seg { width:100%; }
+#layer_screen .ui-v21-settings .seg>div { width:auto; flex:1; min-height:var(--ui-hit); padding:0 8px; display:flex; align-items:center; justify-content:center; }
+#layer_screen .ui-v21-settings .set-toggle { min-height:var(--ui-hit); }
+#layer_screen .ui-v21-settings .slot-btn,
+#layer_screen .ui-v21-settings .set-back { min-height:var(--ui-hit); display:flex; align-items:center; justify-content:center; }
+#layer_screen .ui-v21-settings button.set-chip { min-height:var(--ui-hit); min-width:var(--ui-hit); }
+#layer_screen .ui-v21-settings input[type=range] { min-height:var(--ui-hit); }
+#layer_screen .status-close { min-width:var(--ui-hit); min-height:var(--ui-hit); }
+#layer_screen .status-tab,
+#layer_screen .status-return { min-height:var(--ui-hit); }
+#layer_screen .status-text-button { min-height:var(--ui-hit); }
+#layer_screen .outfitbtn { min-height:var(--ui-hit); }
+#layer_screen .btn { min-height:var(--ui-hit); box-sizing:border-box; }
+#layer_mini .gm-x { width:var(--ui-hit); height:var(--ui-hit); right:0; top:0; }
+#layer_mini .gm-x img { left:calc((var(--ui-hit) - 34px)/2); top:calc((var(--ui-hit) - 34px)/2); }
+#layer_mini .ph-xbtn { width:var(--ui-hit)!important; height:var(--ui-hit)!important; left:calc(710px - var(--ui-hit))!important; }
+#layer_mini .ph-xbtn>img { left:calc((var(--ui-hit) - 34px)/2)!important; top:calc((var(--ui-hit) - 34px)/2)!important; width:34px!important; height:34px!important; }
+#layer_mini .ph-btn:not(.ph-xbtn) { min-height:var(--ui-hit); }
+#layer_mini .ph-txt { line-height:1.35; }
+/* Full-window collection controls use CSS pixels rather than scaled stage units. */
+.memory-btn { min-height:44px; }
+.memory-top>.memory-btn, .memory-filters .memory-btn { white-space:nowrap; }
+.scene-art-button { min-width:44px; }
+@media (prefers-reduced-motion:reduce) {
+  .ui-v21-app, .ui-v21-app .ic { transition:none; }
+}
