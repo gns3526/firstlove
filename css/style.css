@@ -246,6 +246,31 @@ img[data-asset^="vfx/result_cube_off_"]{filter:grayscale(1) brightness(.5);opaci
   .after-reader .after-figure{animation:none!important;scale:none}
 }
 
+/* 획득 연출(vn.acquire): 아이템 상자가 튀어나오고 "○○ 획득!" 이름표가 잠깐 뜬다. 누르기를 가로채지 않는다. */
+.acquire{position:absolute;left:50%;top:560px;width:420px;margin-left:-210px;display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:40;animation:acq-in .35s ease-out both}
+.acquire.out{animation:acq-out .45s ease-in forwards}
+.acquire-burst{position:absolute;left:50%;top:-40px;width:320px;height:320px;margin-left:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,190,.95) 0%,rgba(255,214,120,.5) 34%,rgba(255,200,90,0) 68%);animation:acq-glow 2.6s ease-out both}
+.acquire-burst:before{content:"";position:absolute;inset:-30px;border-radius:50%;background:repeating-conic-gradient(rgba(255,236,170,.55) 0deg 6deg,rgba(255,236,170,0) 6deg 24deg);-webkit-mask:radial-gradient(circle,#000 30%,transparent 70%);mask:radial-gradient(circle,#000 30%,transparent 70%);animation:acq-spin 6s linear infinite}
+.acquire-box{position:relative;width:188px;height:188px;border-radius:40px;background:linear-gradient(180deg,#fffaf0,#f3e3c7);box-shadow:0 12px 30px rgba(40,22,0,.4),inset 0 0 0 4px rgba(214,170,90,.95),inset 0 0 0 9px rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;animation:acq-pop .55s cubic-bezier(.2,1.6,.4,1) both}
+.acquire-icon{width:156px;height:156px;object-fit:contain;filter:drop-shadow(0 5px 6px rgba(0,0,0,.28))}
+.acquire-label{position:relative;margin-top:20px;padding:11px 30px;border-radius:999px;background:rgba(18,24,38,.88);color:#fff;font-size:31px;font-weight:700;letter-spacing:.01em;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.35);animation:acq-rise .45s .12s ease-out both}
+.acquire-label span{color:#ffd66e}
+.acquire-sub{position:relative;margin-top:12px;max-width:420px;color:#fff;font-size:23px;line-height:1.45;text-align:center;word-break:keep-all;text-shadow:0 2px 8px rgba(0,0,0,.95),0 0 18px rgba(0,0,0,.6);animation:acq-rise .45s .2s ease-out both}
+@keyframes acq-in{from{opacity:0}to{opacity:1}}
+@keyframes acq-out{to{opacity:0;transform:translateY(-24px)}}
+@keyframes acq-pop{0%{transform:scale(.3) rotate(-8deg);opacity:0}60%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+@keyframes acq-rise{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+@keyframes acq-glow{0%{transform:scale(.4);opacity:0}25%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:.85}}
+@keyframes acq-spin{to{transform:rotate(360deg)}}
+/* 얼굴을 가리지 않게: 세로는 가슴 높이(대사창 바로 위), 가로는 조금 작게 얼굴 아래 */
+#stage.landscape .acquire{top:226px}
+#stage.landscape .acquire-box{width:130px;height:130px;border-radius:28px}
+#stage.landscape .acquire-icon{width:108px;height:108px}
+#stage.landscape .acquire-burst{width:230px;height:230px;margin-left:-115px;top:-32px}
+#stage.landscape .acquire-label{margin-top:12px;padding:8px 24px;font-size:25px}
+#stage.landscape .acquire-sub{margin-top:6px;font-size:20px}
+@media(prefers-reduced-motion:reduce){.acquire,.acquire-box,.acquire-label,.acquire-sub,.acquire-burst,.acquire-burst:before{animation:none!important}}
+
 /* --- 모바일 전용 보정 --- */
 html,body{overscroll-behavior:none;position:fixed;inset:0;touch-action:manipulation}
 #stage{touch-action:manipulation}

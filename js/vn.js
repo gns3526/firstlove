@@ -268,6 +268,26 @@
     if (emote === "heart") vn.fx("heart");
   };
 
+  // 획득 연출: {get:"snack_chips"} 또는 {get:{item, name, icon, sub}} — 아이템 그림이 튀어나오고 "○○ 획득!" 카드가 잠깐 뜬다.
+  // 인벤토리 수량은 바꾸지 않는다(수량은 item 델타). 진행을 막지 않고, 누르기도 가로채지 않는다.
+  vn.acquire = function (o, ctx) {
+    if (!o) return;
+    if (typeof o === "string") o = { item: o };
+    var def = (o.item && cfg.items && cfg.items[o.item]) || {};
+    var name = o.name || def.name || "", icon = o.icon || def.img;
+    var layer = G.ui.layer("popup"); if (!layer || !name) return;
+    var card = G.ui.el("div", "acquire", "", layer);
+    G.ui.el("div", "acquire-burst", "", card);
+    var box = G.ui.el("div", "acquire-box", "", card);
+    if (icon && G.assets.has(icon)) { var im = G.ui.imgEl(icon, "", box); im.className = "acquire-icon"; im.alt = ""; }
+    var label = G.ui.el("div", "acquire-label", "", card);
+    var strong = G.ui.el("b", "", "", label); strong.textContent = name;
+    var tail = G.ui.el("span", "", "", label); tail.textContent = " 획득!";
+    if (o.sub) { var sub = G.ui.el("div", "acquire-sub", "", card); sub.textContent = G.text(o.sub, ctx); }
+    G.sfx("get"); vn.fx("sparkle");
+    setTimeout(function () { card.classList.add("out"); setTimeout(function () { card.remove(); }, 450); }, 2300);
+  };
+
   // 화자별 이름 색 — 히로인은 고유색을 밝게, 그 외는 역할별 기본색
   var NAME_COLORS = { me: "#ffdba1", app: "#8ff0dd", "?": "#c7b7ff" };
   function lighten(hex, amt) {
@@ -603,6 +623,7 @@
         }
         // 앨범 원화(CG_CATALOG)는 등록처가 달라 앨범 뷰어로 연다.
         if (s.cg && G.gallery) { G.gallery.unlock(s.cg); await G.gallery.view(s.cg, { story: true }); }
+        if ("get" in s) vn.acquire(s.get, ctx);
         if ("say" in s) { await vn.say(s.say, G.text(s.text, ctx), undefined, s); }
         if ("think" in s) { await vn.say("me", G.text(s.think, ctx), "think", s); }
         if ("text" in s && !("say" in s)) { await vn.say(null, G.text(s.text, ctx), undefined, s); }

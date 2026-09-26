@@ -1200,7 +1200,7 @@ registerScenes({
       "3시. 서윤은 벌써 놀이터 그네에 앉아 있었다. 손에는 종이봉투.",
       {show:"seoyoon", pos:"center"},
       {say:"seoyoon", text:"…왔냐. 이거."},
-      "봉투를 던지듯 건넸다. 안에는 감자칩 한 봉지. 그리고… 뭔가 검은 덩어리.",
+      {text:"봉투를 던지듯 건넸다. 안에는 감자칩 한 봉지. 그리고… 뭔가 검은 덩어리.", get:{item:"snack_chips", sub:"서윤이 건넨 봉투 속, 수제 초콜릿과 함께"}},
       {say:"me", text:"…이건 뭐야?"},
       {say:"seoyoon", text:"초콜릿. 만들었어. 세 번 태우고 네 번째. 모양은 포기했어.", emote:"blush"},
       {say:"seoyoon", text:"감자칩은 망했을 때 대비용. 근데 같이 먹으면 단짠이야. 진짜로."},

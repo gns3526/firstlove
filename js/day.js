@@ -621,7 +621,7 @@
           var money = 100 + Math.floor(G.rng() * 120); G.addMoney(money); G.state.film++;
           var snack = G.pick(["snack_chips", "snack_kancho", "snack_choco", "snack_pepero"]); G.addItem(snack, 1);
           G.state.flags["ns_win_" + enemy] = true;
-          await vn.playSteps(["보물상자가 나타났다.", "포링 " + money + ", 필름 1개, 그리고 " + cfg.items[snack].name + G.josa(cfg.items[snack].name, "을를") + " 손에 넣었다."], ctx);
+          await vn.playSteps(["보물상자가 나타났다.", { text: "포링 " + money + ", 필름 1개, 그리고 " + cfg.items[snack].name + G.josa(cfg.items[snack].name, "을를") + " 손에 넣었다.", get: { item: snack, sub: "포링 " + money + " · 필름 1개도 함께" } }], ctx);
           G.ui.refreshTop();
         } else {
           G.addCond(-10); G.state.flags["ns_fail_" + enemy] = true;

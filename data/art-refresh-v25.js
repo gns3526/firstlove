@@ -56,7 +56,7 @@
     {
       "id": "v25_prologue_minjae_welcome_wide",
       "title": "민재 — 옆자리의 안내자",
-      "wide": "assets/art_refresh/production-v25/batch-01/prologue-minjae-welcome-wide.webp",
+      "wide": "art_refresh/production-v25/batch-01/prologue-minjae-welcome-wide.png",
       "scene": "prologue",
       "anchor": "어서 와, 전학생. 난 강민재. 이 반 정보통이자 인간 내비게이션이지.",
       "hold": 3
@@ -96,7 +96,7 @@
     {
       "id": "v25_prologue_yuri_introduction_wide",
       "title": "유리 — 늦은 자기소개",
-      "wide": "assets/art_refresh/production-v25/batch-01/prologue-yuri-introduction-wide.webp",
+      "wide": "art_refresh/production-v25/batch-01/prologue-yuri-introduction-wide.png",
       "scene": "prologue",
       "anchor": "헤헤, 차유리입니다! 아이돌 지망생이에요~ 노래는 시켜 주시면 언제든지요.",
       "hold": 3

@@ -82,7 +82,8 @@
     zoom: function () { rustle(0, 0.09, 0.045, 850); },
     charge: function () { note(57, 0, 0.32, 0.045, "sine", 76); },
     drop: function () { note(76, 0, 0.15, 0.07, "sine", 52); },
-    clap: function () { rustle(0, 0.1, 0.1, 1600); rustle(0.08, 0.12, 0.075, 1900); }
+    clap: function () { rustle(0, 0.1, 0.1, 1600); rustle(0.08, 0.12, 0.075, 1900); },
+    get: function () { chime([76, 81, 88], 0.07, 0.07); note(64, 0, 0.35, 0.03, "triangle"); }
   };
   var aliases = { ok: "select", pin: "select", save: "heart", lock: "error", beep: "tick", appear: "open", intro: "magic", land: "pang", hit: "pang", pop: "tap", treasure: "win", win_round: "heart", lose_round: "lose", fever: "magic", go: "select", timeup: "msg", result_great: "win", result_good: "heart", result_bad: "lose", result_perfect: "win", result_normal: "select", result_fail: "lose" };
   G.sfx = function (name) {

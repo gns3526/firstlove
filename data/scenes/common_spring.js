@@ -13,7 +13,7 @@ registerScenes({
       {say:"mom", text:"{N}! 넥타이 삐뚤어졌어. 이리 와 봐."},
       {say:"me", text:"괜찮아. 이러다 늦어."},
       {say:"mom", text:"지각은 하루지만 첫인상은 1년 가. 엄마가 알아."},
-      "엄마는 넥타이를 바로잡더니 주머니에 뭔가를 찔러 넣었다. 초코바였다.",
+      {text:"엄마는 넥타이를 바로잡더니 주머니에 뭔가를 찔러 넣었다. 초코바였다.", get:{name:"초코바", icon:"item/chocobar", sub:"엄마가 주머니에 찔러 넣어 준 간식"}},
       {say:"mom", text:"친구 생기면 나눠 먹어. 없으면 혼자 먹고."},
       {hide:"mom"},
       {bg:"road_to_school"},
