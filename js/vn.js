@@ -224,14 +224,35 @@
     setCharacterArt(id, c, o.expression || "neutral", { pending: !!o.expression, hold: !!o.expressionHold });
     if (o.anim === "jump") { c.el.animate([{ translate: "0 0" }, { translate: "0 -40px" }, { translate: "0 0" }], { duration: 400 }); }
     if (o.anim === "shake") { c.el.classList.add("shaking"); setTimeout(function () { c.el.classList.remove("shaking"); }, 500); }
-    // reposition others
-    Object.keys(chars).forEach(function (k) { chars[k].el.classList.remove("dimmed"); });
+    arrangePair(id);
+    Object.keys(chars).forEach(function (k) { chars[k].el.classList.remove("dimmed", "speaking"); });
     return c;
   };
+  // 두 사람이 함께 서면 한 사람은 왼쪽, 한 사람은 오른쪽. 가운데+옆, 같은 쪽 둘은 얼굴이 겹쳐 누가 누군지 안 보인다.
+  function placeAt(c, pos) {
+    if (c.pos === pos) return;
+    c.el.classList.remove("left", "right", "center"); c.el.classList.add(pos); c.pos = pos;
+  }
+  function arrangePair(id) {
+    var ks = Object.keys(chars); if (ks.length !== 2 || !chars[id]) return;
+    var c = chars[id], other = chars[ks[0] === id ? ks[1] : ks[0]];
+    if (c.fullFrame || other.fullFrame) return;
+    if (c.pos !== "center" && other.pos !== "center" && c.pos !== other.pos) return;
+    var side = c.pos !== "center" ? c.pos : other.pos === "left" ? "right" : other.pos === "right" ? "left" : "right";
+    placeAt(c, side); placeAt(other, side === "left" ? "right" : "left");
+  }
   vn.hide = function (id) { id = G.resolveId(id); var c = chars[id]; if (!c) return; c.el.classList.add("hidden"); delete chars[id]; setTimeout(function () { c.el.remove(); }, 400); if (Object.keys(chars).length === 1) { var k = Object.keys(chars)[0]; chars[k].el.className = "spr center"; chars[k].pos = "center"; } };
   vn.hideAll = function () { if (G.sceneArt) G.sceneArt.clearPresentation(); removeEventArtButton(); Object.keys(chars).forEach(function (k) { vn.hide(k); }); };
+  // 말하는 사람만 밝게, 앞으로. 화면 밖 인물(엄마·민재 등)이 말하면 화면의 인물은 모두 한 발 물러난다.
+  // 주인공·앱·'모두'의 말과 나레이션은 누구도 어둡게 하지 않는다. 돌려주는 값은 말하는 사람의 자리.
+  var NEUTRAL_VOICES = { me: 1, app: 1, all: 1 };
   vn.focus = function (id) {
-    Object.keys(chars).forEach(function (k) { if (id && k !== id && chars[id]) chars[k].el.classList.add("dimmed"); else chars[k].el.classList.remove("dimmed"); });
+    var onStage = !!(id && chars[id]), offStage = !!(id && !onStage && !NEUTRAL_VOICES[id]);
+    Object.keys(chars).forEach(function (k) {
+      chars[k].el.classList.toggle("dimmed", onStage ? k !== id : offStage);
+      chars[k].el.classList.toggle("speaking", onStage && k === id);
+    });
+    return onStage ? chars[id].pos : null;
   };
   vn.emote = function (id, emote, options) {
     id = G.resolveId(id);
@@ -294,9 +315,12 @@
     var d = ensureDlg(); syncEventArtButton(); d.next.style.display = "none";
     if (who) {
       d.nameEl.style.display = ""; d.nameEl.textContent = G.charName(who) + (kind === "think" ? " (속마음)" : "");
-      d.nameEl.style.color = vn.nameColor(who); vn.focus(G.resolveId(who));
+      d.nameEl.style.color = vn.nameColor(who);
+      // 두 사람이 서 있을 때 이름표는 말하는 사람 쪽에 붙는다.
+      var side = vn.focus(G.resolveId(who));
+      d.classList.toggle("speaker-right", !callMode && side === "right" && Object.keys(chars).length > 1);
     }
-    else { d.nameEl.style.display = "none"; vn.focus(null); }
+    else { d.nameEl.style.display = "none"; vn.focus(null); d.classList.remove("speaker-right"); }
     d.classList.toggle("noname", !who);
     d.textEl.className = "dlg-text " + (kind === "think" ? "think" : who ? "" : "narr");
     d.textEl.textContent = "";
@@ -647,7 +671,7 @@
         G.state.flags.at = r.grade; G.state.flags.at_photo = !!r.photoUnlocked; G.state.flags.at_liked = r.likedTotal || 0;
         var gain = r.grade === "great" ? 10 : r.grade === "good" ? 6 : 2;
         G.addAff(who, gain); G.ui.refreshTop();
-        Object.keys(chars).forEach(function (k) { chars[k].el.classList.remove("dimmed"); });
+        Object.keys(chars).forEach(function (k) { chars[k].el.classList.remove("dimmed", "speaking"); });
       });
     }
     if (s.minigame === "dice") {

@@ -208,13 +208,13 @@
   after('date_park_daeun', 11, '다은이 스케치북을 꺼냈다', 'eventCgHold', 2);
   seasonalEvent('date_fountain_haneul', 25, '하늘이 비명 대신 웃음을 터뜨렸다', 'haneul_date', ['spring']);
   after('date_fountain_haneul', 25, '하늘이 비명 대신 웃음을 터뜨렸다', 'eventCgHold', 2);
-  seasonalEvent('date_concert_hall_yuri', 53, '무대 가장자리에 나란히 앉았다', 'yuri_date', ['autumn']);
+  seasonalEvent('date_concert_hall_yuri', 53, '무대 가장자리에 나란히 앉아 다리를 흔들었다', 'yuri_date', ['autumn']);
 
   // These anchors occur only on the existing aff >= 70 confession success paths.
   // They depict tears, a cup or an offered hand, not a separate kiss reward.
   after('confession_seoyoon', 66, '웃고 있었다. 울고 있었다. 둘 다.', 'eventCg', 'seoyoon_confession');
-  after('confession_daeun', 45, '쓰지 않고, 손에 든 채로 내 쪽으로 왔다', 'eventCg', 'daeun_confession');
-  after('confession_daeun', 45, '쓰지 않고, 손에 든 채로 내 쪽으로 왔다', 'eventCgHold', 2);
+  after('confession_daeun', 45, '다은이 안경을 집어 들었다. 하지만 쓰지 않', 'eventCg', 'daeun_confession');
+  after('confession_daeun', 45, '다은이 안경을 집어 들었다. 하지만 쓰지 않', 'eventCgHold', 2);
   after('confession_haneul', 26, '하늘은 두 손으로 컵을 감쌌다', 'eventCg', 'haneul_confession');
   after('confession_haneul', 26, '하늘은 두 손으로 컵을 감쌌다', 'eventCgHold', 2);
   after('confession_yuri', 64, '웃고 있었다. 울고 있었다. 둘 다.', 'eventCg', 'yuri_confession');
@@ -225,7 +225,7 @@
   after('epilogue_daeun', 37, '다은의 스케치북 위에도', 'eventCg', 'daeun_ending');
   after('epilogue_haneul', 11, '손을 뻗어 이름표를 고쳐 줬다', 'eventCg', 'haneul_ending');
   after('epilogue_haneul', 11, '손을 뻗어 이름표를 고쳐 줬다', 'eventCgHold', 2);
-  after('epilogue_yuri', 32, '유리가 손을 내밀었다. 새끼손가락.', 'eventCg', 'yuri_ending');
-  after('epilogue_yuri', 32, '유리가 손을 내밀었다. 새끼손가락.', 'eventCgHold', 4);
+  after('epilogue_yuri', 32, '벚꽃이 떨어졌다. 유리가 새끼손가락을 내밀었', 'eventCg', 'yuri_ending');
+  after('epilogue_yuri', 32, '벚꽃이 떨어졌다. 유리가 새끼손가락을 내밀었', 'eventCgHold', 4);
   if (report.errors.length) console.error('Scene art direction errors:', report.errors);
 })();

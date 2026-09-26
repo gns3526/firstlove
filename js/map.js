@@ -386,7 +386,7 @@
         thumb.style.backgroundImage = s.thumbUrl && !s.locked ? "url('" + s.thumbUrl + "')" : "none";
         thumbDis.style.display = s.locked || !s.thumbUrl ? "" : "none";
         thumbTag.style.display = (s.locked || s.fav) ? "" : "none";
-        thumbTag.textContent = s.locked ? "아직 갈 수 없음" : ("♥ " + (heroineName || "그녀") + " 취향");
+        thumbTag.textContent = s.locked ? "아직 갈 수 없음" : ("♥ " + (heroineName || "상대") + " 취향");
         thumbTag.style.background = s.locked ? "#666" : "#ea6b61";
         nameEl.innerHTML = esc(s.name || s.id) + (s.fav && !s.locked ? "<img src='" + imgUrl("gui/info_heroine_like_01") + "' alt=''>" : "");
         costTxt.textContent = (+s.cost || 0) + " 포링";

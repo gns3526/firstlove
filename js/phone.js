@@ -176,7 +176,7 @@
         if (G.state.aff[h] < 60) G.addAff(h, 1);
       } else {
         vn.callStart(h);
-        if (already) await vn.say(h, G.text({ seoyoon: "야, 아까 통화했잖아. 뭐, 또 할 말 있어?", daeun: "…아까도 전화했었는데. …아, 싫다는 건 아니야.", haneul: "아까 통화했는데, 무슨 일 있어? ^^", yuri: "또 전화했어?! 헤헤, 보고 싶었구나~", seoha: "오늘 두 번째 통화네. …기록해 둘게. 무슨 일이야?", ina: "또 걸었어? 예정에 없던 연결편이네. 무슨 일이야?" }, { h: h }));
+        if (already) await vn.say(h, G.text({ seoyoon: "야, 아까 통화했잖아. 뭐, 또 할 말 있어?", daeun: "…아까도 전화했었는데. …아, 싫다는 건 아니야.", haneul: "아까도 통화했는데, 무슨 일 있어?", yuri: "또 전화했어? 헤헤, 보고 싶었구나~", seoha: "오늘 두 번째 통화네. …기록해 둘게. 무슨 일이야?", ina: "또 걸었어? 예정에 없던 연결편이네. 무슨 일이야?" }, { h: h }));
         else { G.state.callDay[h] = G.state.dayIdx; await vn.say(h, "여보세요? …아, " + G.state.name + G.josa(G.state.name, "이에") + "구나."); }
         await options();
         await vn.say(h, "다음에 또 얘기하자. 잘 자!");
@@ -245,16 +245,16 @@
         G.state.inviteAsked[h] = G.state.dayIdx;
         await vn.say("me", G.isAdult(h) ? nextDay.date + "에 시간 괜찮으세요? 같이 나가실래요?" : nextDay.date + "에 시간 괜찮아? 같이 나갈래?");
         var accept = G.isAdult(h) ? (G.state.aff[h] >= 45 || G.rng() < 0.6) : (G.state.aff[h] >= 30 || G.rng() < 0.65);
-        if (accept) { G.state.invite = h; G.state.inviteDay = G.state.dayIdx + 1; G.addAff(h, 2); await vn.say(h, G.text({ seoyoon: "…그래. 그날 보자. 늦지 마라.", daeun: "…응. 나, 갈게. …기다릴게.", haneul: "좋아. 그날 보자 ^^ 어디 갈지는 네가 정해줘.", yuri: "당연히 콜!! 헤헤, 뭐 입고 가지~", seoha: "주말에? …좋아. 업무 아니고 약속이라고 적어 둘게. 확인.", ina: "마침 쉬는 날이야. 좋아. 이번엔 내가 탑승 안내 받아 볼게." }, { h: h })); }
-        else await vn.say(h, G.text({ seoyoon: "…이번엔 좀 어려워. 다음에 다시 얘기하자.", daeun: "…아직은 조금, 미안해. 오늘은 전화로 얘기하자.", haneul: "이번에는 어려울 것 같아. 미안해. 다른 얘기는 편하게 해도 돼 ^^", yuri: "그날은 힘들 것 같아~ 미안! 대신 조금 더 얘기하자!!", seoha: "그날은 밀린 서류가 있어. 미안. …다음 칸은 비워 둘게.", ina: "그날 비행이 잡혔어. 미안. 착륙하면 먼저 연락할게." }, { h: h }));
+        if (accept) { G.state.invite = h; G.state.inviteDay = G.state.dayIdx + 1; G.addAff(h, 2); await vn.say(h, G.text({ seoyoon: "…그래. 그날 보자. 늦지 마라.", daeun: "…응. 나, 갈게. …기다릴게.", haneul: "좋아, 그날 보자. 어디 갈지는 네가 정해 줘.", yuri: "당연히 콜! 헤헤, 뭐 입고 가지~", seoha: "주말에? …좋아. 업무 아니고 약속이라고 적어 둘게. 확인.", ina: "마침 쉬는 날이야. 좋아. 이번엔 내가 탑승 안내 받아 볼게." }, { h: h })); }
+        else await vn.say(h, G.text({ seoyoon: "…이번엔 좀 어려워. 다음에 다시 얘기하자.", daeun: "…아직은 조금, 미안해. 오늘은 전화로 얘기하자.", haneul: "이번에는 어려울 것 같아. 미안해. 그래도 다른 얘기는 편하게 해도 돼.", yuri: "그날은 힘들 것 같아. 미안! 대신 지금 조금만 더 얘기하자~", seoha: "그날은 밀린 서류가 있어. 미안. …다음 칸은 비워 둘게.", ina: "그날 비행이 잡혔어. 미안. 착륙하면 먼저 연락할게." }, { h: h }));
       } else if (c.act === "gift") {
         var item = await ph.giftPick(snacks); if (!item) continue;
         if (!ph.prepareGift(h, item)) continue;
         await vn.say("me", "다음에 만날 때 " + cfg.items[item].name + " 가져갈게" + (G.isAdult(h) ? "요." : "."));
-        await vn.say(h, G.text({ seoyoon: "…그래. 그때 같이 먹자. 잊지 마라.", daeun: "…응. 만날 때까지, 기다릴게.", haneul: "챙겨 주는 거야? 좋아. 다음에 만나서 같이 먹자 ^^", yuri: "간식 약속!! 헤헤, 다음에 만날 때 기대할게~", seoha: "간식? 학생한테 받는 건… 아니, 약속한 날 받을게. 확인.", ina: "나 주려고? 그럼 다음에 만날 때까지 기대하고 있을게." }, { h: h }));
+        await vn.say(h, G.text({ seoyoon: "…그래. 그때 같이 먹자. 잊지 마라.", daeun: "…응. 만날 때까지, 기다릴게.", haneul: "챙겨 주는 거야? 고마워. 다음에 만나서 같이 먹자.", yuri: "간식 약속! 헤헤, 다음에 만날 때 기대할게~", seoha: "간식? 학생한테 받는 건… 아니, 약속한 날 받을게. 확인.", ina: "나 주려고? 그럼 다음에 만날 때까지 기대하고 있을게." }, { h: h }));
       } else if (c.act === "cancelGift") {
         ph.cancelGift(h);
-        await vn.say("me", G.isAdult(h) ? "간식은 다시 골라 볼게요. 다음에 만날 때 말씀드릴게요." : "간식은 다시 골라볼게. 다음에 만날 때 얘기하자.");
+        await vn.say("me", G.isAdult(h) ? "간식은 다시 골라 볼게요. 정하면 말씀드릴게요." : "간식은 다시 골라 볼게. 정하면 얘기할게.");
         await vn.say(h, "응, 괜찮아. 편하게 생각해.");
       } else break;
     }
@@ -330,8 +330,8 @@
     var counter = G.ui.imgEl("gui/phone_box_02", "position:absolute;left:0;top:0;width:720px;height:1280px;pointer-events:none;z-index:0", G.ui.layer("ui")); counter.src = G.assets.bg("cvs_counter");
     G.ui.topbar(true);
     var first = !G.state.flags.shop_visited; G.state.flags.shop_visited = true;
-    if (first) await vn.say("narae", "어서 오세요~ 편의점 알바 이나래예요. 하늘고 학생이죠? 필요한 거 있으면 말해요.");
-    else await vn.say("narae", G.pick(["어서 오세요~ 오늘도 왔네요.", "어서 오세요. 밤에 뭐 사러 왔어요?", "오, 단골손님. 뭐 필요해요?"]));
+    if (first) await vn.say("narae", "어서 오세요. 편의점 알바 이나래예요. 하늘고 학생이죠? 필요한 거 있으면 말해요.");
+    else await vn.say("narae", G.pick(["어서 오세요. 오늘도 왔네요.", "어서 오세요. 밤에 뭐 사러 왔어요?", "오, 단골손님. 뭐 필요해요?"]));
     while (true) {
       var c = await vn.choice([{ text: "구매한다.", act: "buy" }, { text: "대화한다.", act: "talk" }, { text: "나간다.", act: "exit" }]);
       if (c.act === "exit") break;
@@ -479,7 +479,7 @@
       var jc;
       try {
         pl.jobs.forEach(function (j) { var jb = cfg.jobs[j]; var ok = Object.keys(jb.req).every(function (k) { return G.state.stats[k] >= jb.req[k]; }); G.ui.imgEl(ok ? "gui/alba_btn0" + jb.idx + "_n" : "guiv/alba_btn0" + jb.idx + "_off", "width:110px;height:120px", iconRow); });
-        jc = await vn.choice(pl.jobs.map(function (j) { var jb = cfg.jobs[j]; var ok = Object.keys(jb.req).every(function (k) { return G.state.stats[k] >= jb.req[k]; }); return { text: jb.name + (ok ? "" : " (조건: " + Object.keys(jb.req).map(function (k) { return cfg.stats[k] + jb.req[k]; }).join(", ") + ")") + " · 숙련 " + G.state.alba[j] + "%", job: j, ok: ok }; }).concat([{ text: "가게 나가기", job: null }]), "어떤 일을?");
+        jc = await vn.choice(pl.jobs.map(function (j) { var jb = cfg.jobs[j]; var ok = Object.keys(jb.req).every(function (k) { return G.state.stats[k] >= jb.req[k]; }); return { text: jb.name + (ok ? "" : " (조건: " + Object.keys(jb.req).map(function (k) { return cfg.stats[k] + jb.req[k]; }).join(", ") + ")") + " · 숙련 " + G.state.alba[j] + "%", job: j, ok: ok }; }).concat([{ text: "가게를 나간다", job: null }]), "어떤 일을 할까?");
       } finally { iconRow.remove(); }
       if (!jc.job) { vn.hideAll(); return false; }
       if (!jc.ok) {

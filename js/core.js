@@ -65,7 +65,10 @@
     if (id === "me") return G.state.name;
     if (id === "$h") id = (G.ctx && G.ctx.h) || G.top();
     if (id === "$top") id = G.top();
-    var c = cfg.characters[id]; return c ? c.name.replace("{N}", G.state.name) : id;
+    var c = cfg.characters[id];
+    // 무대 이름으로만 아는 사람(AKI)은 정체를 알기 전까지 무대 이름으로 부른다.
+    if (c && c.stageName && !(c.revealFlag && G.state.flags && G.state.flags[c.revealFlag])) return c.stageName;
+    return c ? c.name.replace("{N}", G.state.name) : id;
   };
   // 나레이션용 이름: 학생은 성을 뺀 이름(한서윤 → 서윤), 성인은 그대로(서하·이나).
   G.givenName = function (id) { var n = G.charName(id); return G.cfg.heroines.indexOf(G.resolveId(id)) >= 0 && n.length === 3 ? n.slice(1) : n; };
@@ -471,7 +474,8 @@
     }
     if (t && typeof t === "object") { var h = ctx.h || G.top(); t = t[h] != null ? t[h] : (t[G.top()] || Object.values(t)[0] || ""); }
     if (typeof t !== "string") return "";
-    var hn = G.charName(ctx.h || G.top());
+    // {H}는 나레이션·대사 속 호칭이라 성을 뺀 이름(한서윤 → 서윤). 성인은 그대로(서하·이나).
+    var hn = G.givenName(ctx.h || G.top());
     var s = t.replace(/\{N\}/g, G.state.name).replace(/\{H\}/g, hn).replace(/\\n/g, "\n");
     if (t.indexOf("{N}") >= 0) s = G.fixJosa(s, G.state.name);
     if (t.indexOf("{H}") >= 0) s = G.fixJosa(s, hn);

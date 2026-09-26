@@ -13,14 +13,14 @@ registerScenes({
       {if:"season=='winter'", goto:"winter"},
       "빈 옆 반 교실. 문제집을 펴자 새 종이 냄새가 훅 올라왔다.",
       {show:"taeo", pos:"center", anim:"in"},
-      {say:"taeo", text:"어, {N}. 여기서 공부해? 나도 조용해서 자주 와."},
+      {say:"taeo", text:"어, {N}. 여기서 공부해? 나도 자주 와. 조용하거든."},
       {say:"taeo", text:"그 문제는 공식부터 쓰지 말고 그림을 먼저 그려. 그럼 반은 풀려."},
       "짧고 정확한 힌트였다. 펜이 조금 빨라졌다.",
-      {say:"taeo", text:"…뭐. 다음엔 네가 나한테 물어보지 말고 이기러 와.", emote:"laugh"},
+      {say:"taeo", text:"…뭐. 다음엔 힌트 없이 이기러 와.", emote:"laugh"},
       {hide:"taeo"},
       {jump:"end"},
       {label:"summer"},
-      "선풍기 한 대가 교실을 느리게 돌았다. 종이가 자꾸 들썩였다.",
+      "교실 선풍기가 느리게 고개를 돌렸다. 바람이 지나갈 때마다 종이가 들썩였다.",
       "땀이 손목을 타고 내려와 문제집에 동그란 자국을 남겼다.",
       {think:"…더워도 한 문제만 더. 태오는 이 날씨에도 1등이겠지, 아마."},
       {jump:"end"},
@@ -28,8 +28,8 @@ registerScenes({
       "난방이 시원찮은 옆 반 교실. 입김이 문제집 위로 하얗게 퍼졌다.",
       {show:"minjae", pos:"center", anim:"in"},
       {say:"minjae", text:"야, 너 미쳤냐. 여기서 공부를? 손가락 얼어서 펜 놓치겠다."},
-      {say:"minjae", text:"…나도 옆에 앉는다. 집중은 못 해줘도 체온은 나눠줄게.", emote:"laugh"},
-      "둘이서 문제집 하나를 나눠 봤다. 이상하게 집중이 더 잘 됐다.",
+      {say:"minjae", text:"…나도 옆에 앉는다. 공부는 못 도와줘도 체온은 나눠 줄게.", emote:"laugh"},
+      "둘이서 문제집 하나를 나눠 봤다. 이상하게 집중이 더 잘됐다.",
       {hide:"minjae"},
       {label:"end"},
       {think:"…오늘 푼 만큼은 머리에 남았겠지."}
@@ -43,11 +43,11 @@ registerScenes({
       {if:"season=='winter'", goto:"winter"},
       "체육관. 바닥에 운동화가 끌리는 소리가 높게 울렸다.",
       {show:"t_kang", pos:"center", anim:"in"},
-      {say:"t_kang", text:"오, 자발적으로 운동하는 놈이 있네! 기특하다!", emote:"exclaim"},
-      {say:"t_kang", text:"기특한 김에 열 바퀴. 아니, 스무 바퀴! 청춘은 뛰는 거다!"},
+      {say:"t_kang", text:"오, 제 발로 운동하러 온 놈이 있네? 기특하다!", emote:"exclaim"},
+      {say:"t_kang", text:"기특한 김에 열 바퀴. 아니, 스무 바퀴. 청춘은 뛰는 거다!"},
       {fx:"shake"},
       "칭찬인지 벌인지 모를 소리를 들으며 뛰었다. 다리가 후들거렸다.",
-      {say:"t_kang", text:"좋아! 그 표정! 내일도 와라!", emote:"laugh"},
+      {say:"t_kang", text:"좋아, 그 표정. 내일도 와라!", emote:"laugh"},
       {hide:"t_kang"},
       {jump:"end"},
       {label:"summer"},
@@ -55,7 +55,7 @@ registerScenes({
       {show:"jiho", pos:"center", anim:"in"},
       {say:"jiho", text:"…운동? 이 날씨에? 대단하네. 난 에어컨 찾으러 왔는데."},
       {say:"jiho", text:"물 마셔. 쓰러지면 내가 업어야 되잖아."},
-      "지호가 던져준 생수는 미지근했다. 그래도 목구멍이 살 것 같았다.",
+      "지호가 던져 준 생수는 미지근했다. 그래도 한 모금에 살 것 같았다.",
       {hide:"jiho"},
       {jump:"end"},
       {label:"winter"},
@@ -94,7 +94,7 @@ registerScenes({
     steps: [
       "2층 복도 끝, 음악실 앞. 문틈으로 기타 튜닝 소리가 새어 나왔다.",
       {show:"jiho", pos:"center", anim:"in"},
-      {say:"jiho", text:"…왔냐. 들어와. 서서 듣는 건 좀 부담스럽다."},
+      {say:"jiho", text:"…왔냐. 들어와. 문 앞에 서서 들으면 신경 쓰여."},
       {say:"jiho", text:"코드 세 개면 노래 하나는 돼. 잡아 봐. 검지, 중지, 약지."},
       "지호가 내 손가락을 하나씩 줄 위로 옮겨줬다. 손끝이 아팠다.",
       {choice:[
@@ -102,11 +102,11 @@ registerScenes({
         {text:"지호 연주를 듣기만 한다.", goto:"listen"}
       ]},
       {label:"try"},
-      "띵— 띵— 소리는 형편없었지만 지호는 웃지 않았다.",
+      "띵, 띠잉. 소리는 형편없었지만 지호는 웃지 않았다.",
       {say:"jiho", text:"됐어. 소리 났잖아. 처음엔 그게 다야."},
       {jump:"end"},
       {label:"listen"},
-      "지호의 손이 줄 위를 미끄러졌다. 복도가 잠깐 다른 계절이 된 것 같았다.",
+      "지호의 손이 줄 위를 미끄러졌다. 음악실이 잠깐 다른 계절이 된 것 같았다.",
       {say:"jiho", text:"…이 곡, 아직 끝을 못 냈어. 마지막 몇 마디가 안 나와."},
       {label:"end"},
       {hide:"jiho"},
@@ -130,7 +130,7 @@ registerScenes({
       {label:"winter"},
       "겨울 번화가. 코트 깃을 세운 사람들 사이를 걸었다.",
       "매장 거울 앞에서 목도리를 두 번 감았다 풀었다 했다. 사소한데 오래 걸렸다.",
-      {think:"…이런 걸 신경 쓰게 될 줄은 몰랐는데. 봄엔 안 그랬는데."},
+      {think:"…이런 걸 신경 쓰게 될 줄은 몰랐다. 봄엔 안 그랬는데."},
       {label:"end"}
     ]
   },
@@ -143,7 +143,7 @@ registerScenes({
       {show:"minjae", pos:"left"},
       {show:"seokhwan", pos:"right"},
       {say:"minjae", text:"{N}! 마침 잘 왔어. 석환이가 오늘 밤 별 보러 가자는데 같이 갈래?"},
-      {say:"seokhwan", text:"오, 오늘 목성이 가까워! 망원경 렌즈 닦아 놨어!", emote:"exclaim"},
+      {say:"seokhwan", text:"오, 오늘 목성이 가까워! 망원경 렌즈도 벌써 닦아 놨어.", emote:"exclaim"},
       {say:"minjae", text:"난 목성보다 그 옆 반 애가 더 궁금한데… 농담이야, 농담."},
       {say:"seokhwan", text:"…그 애 이름 뭐야?", emote:"question"},
       {say:"minjae", text:"그걸 왜 네가 물어봐!", emote:"angry"},
@@ -172,7 +172,7 @@ registerScenes({
       {if:"season=='winter'", goto:"winter"},
       {if:"season=='summer'", goto:"summer"},
       {text:{when:"weekend", then:"집. 침대에 그대로 엎어졌다. 주말 오후가 이불처럼 느슨했다.", else:"집. 교복을 벗어 던지고 침대에 엎어졌다."}},
-      "창밖에서 애들 노는 소리가 멀리서 들렸다. 눈꺼풀이 무거워졌다.",
+      "창밖 멀리서 아이들 노는 소리가 들렸다. 눈꺼풀이 무거워졌다.",
       {show:"mom", pos:"center"},
       {say:"mom", text:"{N}, 자는 거야? 저녁은 먹고 자. 국 데워 놨어."},
       "엄마 목소리가 꿈 안쪽까지 따라왔다. 기분 좋은 무게였다.",
@@ -180,13 +180,13 @@ registerScenes({
       {jump:"end"},
       {label:"summer"},
       "선풍기 바람이 얼굴을 훑고 지나갔다. 방바닥이 등에 시원했다.",
-      "폰을 들었다가 내려놨다. 잠금화면의 실루엣이 잠깐 이쪽을 본 것 같았다.",
+      "폰을 들었다가 내려놨다. 잠금화면의 실루엣과 잠깐 눈이 마주친 것 같았다.",
       {think:"…기분 탓이겠지."},
       {jump:"end"},
       {label:"winter"},
       "이불 속. 손끝이 녹을 때까지 아무것도 하지 않았다.",
       {show:"dad", pos:"center"},
-      {say:"dad", text:"…귤 먹어라. 방문 앞에 놓는다."},
+      {say:"dad", text:"…귤 먹어라. 방문 앞에 두고 간다."},
       "아빠는 그 말만 하고 갔다. 귤은 열 개나 됐다.",
       {hide:"dad"},
       {label:"end"}
@@ -204,13 +204,13 @@ registerScenes({
       "카페 Forin. 문에 달린 종이 딸랑, 하고 울렸다. 원두 냄새가 마중 나왔다.",
       {show:"doyoon", pos:"center", anim:"in"},
       {say:"doyoon", text:"왔네. 진짜 왔네. 짐꾼 실력은 저번에 봤으니까, 오늘은 일 실력 좀 보자."},
-      {say:"doyoon", text:"여긴 셋 중에 하나야. 청소, 서빙, 주방보조. 편한 건 없어."},
-      {say:"doyoon", text:"청소는 몸으로, 서빙은 얼굴로, 주방은 손으로. 넌 뭐가 되냐?"},
+      {say:"doyoon", text:"일은 셋 중 하나야. 청소, 서빙, 주방 보조. 편한 건 없어."},
+      {say:"doyoon", text:"청소는 몸으로, 서빙은 얼굴로, 주방은 손으로. 넌 어느 쪽이냐?"},
       {say:"me", text:"…셋 다 자신은 없는데요."},
-      {say:"doyoon", text:"솔직해서 좋다. 자신 있는 놈은 컵 깨. 자신 없는 놈이 오래 가.", emote:"laugh"},
+      {say:"doyoon", text:"솔직해서 좋다. 자신 있는 놈은 컵 깨. 자신 없는 놈이 오래가.", emote:"laugh"},
       "도윤 씨가 앞치마를 던졌다. 하늘이 매일 두르는 것과 같은 색이었다.",
       {say:"doyoon", text:"실수하면 내가 욕하고, 잘하면 하늘이가 칭찬할 거야. 분업이지."},
-      {say:"doyoon", text:"…하늘이 얘기는 여기서 하지 마라. 쟤, 학교랑 여기 나누고 싶어 하니까."},
+      {say:"doyoon", text:"…여기선 하늘이한테 학교 얘기 꺼내지 마라. 걔, 학교랑 여기를 나눠 두고 싶어 하거든."},
       {hide:"doyoon"},
       "앞치마 끈을 두 번 묶었다. 손이 조금 떨렸다."
     ]
@@ -219,16 +219,16 @@ registerScenes({
   "alba_intro_burger": {
     title: "알바 첫 방문 - BURGUR",
     steps: [
-      "번화가 모퉁이 BURGUR. 튀김 기름 냄새가 문 밖까지 새어 나왔다.",
+      "번화가 모퉁이 BURGUR. 튀김 기름 냄새가 문밖까지 새어 나왔다.",
       {show:"mina", pos:"left", anim:"in"},
       {say:"mina", text:"하늘고 {N} 학생? 매니저 홍미나예요. 앉아요. 3분 안에 설명 끝낼게요."},
       {say:"mina", text:"계산대, 서빙, 주방보조. 손 씻기 30초, 인사 15도, 미소는 기본."},
       {say:"mina", text:"질문은 나중에. 지금은 외워요. 시간은 돈이고 돈은 시급이니까."},
       {show:"sora", pos:"right", anim:"jump"},
-      {say:"sora", text:"매니저님, 그렇게 하면 애 도망가요! 안녕, 나 김소라. 옆 학교 2학년!", emote:"laugh"},
+      {say:"sora", text:"매니저님, 그러다 애 도망가요. 안녕, 나 김소라. 옆 학교 2학년!", emote:"laugh"},
       {say:"sora", text:"같은 2학년이지? 말 놔. 여기 매니저님 무서워 보여도 생일엔 케이크 사줘."},
       {say:"mina", text:"김소라 씨. 감자 튀길 시간.", emote:"neutral"},
-      {say:"sora", text:"넵! …나중에 하늘고 얘기 잔뜩 해줘. 우리 학교엔 재미가 없어.", emote:"sweat"},
+      {say:"sora", text:"넵! …나중에 하늘고 얘기 잔뜩 해 줘. 우리 학교는 재미가 없거든.", emote:"sweat"},
       "소라는 소리 없이 입 모양으로 '파이팅'을 하고 주방으로 사라졌다.",
       {hide:"sora"},
       {say:"mina", text:"3분 지났네요. 시작하죠."},
@@ -245,8 +245,8 @@ registerScenes({
       {say:"eunjung", text:"청소, 물품정리, 계산대. 유통기한 지난 거 팔면 그날로 끝이야. 알겠니?"},
       {say:"me", text:"네, 네!"},
       {show:"narae", pos:"right", anim:"in"},
-      {say:"narae", text:"점장님, 첫날부터 겁주지 마세요~ 얘 손 떨리는 거 봐요."},
-      {say:"narae", text:{when:"flag.shop_visited", then:"나는 이나래. 대학생이에요. 밤 손님으로 봤죠? 낮에도 있어요.", else:"나는 이나래. 대학생이에요. 밤에도 있으니까 놀러 와요."}},
+      {say:"narae", text:"점장님, 첫날부터 겁주지 마세요. 얘 손 떨리는 것 좀 봐요."},
+      {say:"narae", text:{when:"flag.shop_visited", then:"대학생 이나래예요. 밤에 손님으로 왔을 때 봤죠? 낮에도 있어요.", else:"대학생 이나래예요. 밤에도 있으니까 놀러 와요."}},
       {say:"eunjung", text:"나래야, 얘한테 폐기 삼각김밥 주지 마. 신입은 그거 먹으면 정 붙어서 못 나가."},
       {say:"narae", text:"그게 노림수 아니었어요?", emote:"laugh"},
       "점장님은 대답 대신 눈을 흘겼다. 그 눈에도 어딘가 웃음이 묻어 있었다.",
@@ -311,7 +311,7 @@ registerScenes({
     steps: [
       {fx:"shake"},
       "결정적인 순간에 손이 미끄러졌다. 가게 안이 잠깐 조용해졌다.",
-      "그래도 봉투는 나왔다. 얇았다. 사과보다 먼저 감사 인사를 했다.",
+      "그래도 봉투는 받았다. 얇았다. 죄송하다는 말보다 고맙다는 말이 먼저 나왔다.",
       {think:"…다음엔 게이지 좀 더 보고 멈추자. 팔에 힘이 너무 들어갔어."}
     ]
   }
@@ -334,7 +334,7 @@ registerScenes({
         {text:"없어요. 진짜로.", goto:"no"}
       ]},
       {label:"yes"},
-      {say:"narae", text:"오~ 그럼 첫 번째 조언. 그 애가 뭘 좋아하는지, 하나만 정확히 알아 둬요."},
+      {say:"narae", text:"오, 그럼 첫 번째 조언. 그 애가 뭘 좋아하는지, 하나만 정확히 알아 둬요."},
       {say:"narae", text:{
         seoyoon:"육상부 애라면 짭짤한 거. 뛰고 나면 단 것보다 짠 게 당기거든요.",
         daeun:"조용한 애라면 작고 나눠 먹기 좋은 거. 과자 한 알씩 건네면 말이 늘어요.",
@@ -346,7 +346,7 @@ registerScenes({
       {label:"no"},
       {say:"narae", text:"없다고 하는 사람이 제일 위험해요. 그 말, 한 달 뒤에 다시 물어볼게요.", emote:"laugh"},
       {label:"end"},
-      {say:"narae", text:"아무튼, 간식은 여기서 사요. 누나 매출도 사랑이니까~"}
+      {say:"narae", text:"아무튼, 간식은 여기서 사요. 누나 매출도 사랑이니까."}
     ]
   },
 
@@ -368,7 +368,7 @@ registerScenes({
         haneul:"'괜찮아' 자주 쓰는 애는… 가끔 안 괜찮은 날이 있어요. 그날을 봐요.",
         yuri:"느낌표 많은 애는 느낌표 없는 날을 조심해요. 그날이 진짜예요."
       }},
-      {think:"…{H} 얘기를 한 것 같았다. 나래 씨는 {H}를 모를 텐데."},
+      {think:"…꼭 {H} 얘기 같다. 나래 씨는 {H}를 모를 텐데."},
       {say:"narae", text:"자, 얼른 답장해요. 삼각김밥은 서비스."}
     ]
   },
@@ -378,15 +378,15 @@ registerScenes({
     steps: [
       {sethero:"top"},
       {show:"narae", pos:"right"},
-      {say:"narae", text:"…나 고등학교 때 얘기 해줄까요? 심심하니까."},
+      {say:"narae", text:"…내 고등학교 때 얘기 해 줄까요? 심심한데."},
       {say:"narae", text:"좋아하는 애가 있었는데, 걔 취향 다 외웠어요. 과자, 음료, 자리까지."},
-      {say:"narae", text:"근데 한 번도 안 줬어. 주면 들킬까 봐. 졸업하고 나서야 후회했죠."},
+      {say:"narae", text:"근데 한 번도 못 줬어요. 주면 들킬까 봐. 졸업하고 나서야 후회했죠."},
       {say:"me", text:"…지금은요?"},
       {say:"narae", text:"지금은 편의점에서 남의 사랑 참견하죠. 재밌어요, 이게.", emote:"laugh"},
       "웃는데 눈이 잠깐 창밖으로 갔다. 유리창엔 나래 씨 얼굴만 흐릿하게 비쳤다.",
       {choice:[
         {text:"지금이라도 연락해 보세요.", goto:"now"},
-        {text:"저는 안 늦게 해볼게요.", aff:{h:1}, goto:"me"}
+        {text:"저는 늦지 않을게요.", aff:{h:1}, goto:"me"}
       ]},
       {label:"now"},
       {say:"narae", text:"…그럴까. 아니다, 이건 손님 상담이지 내 상담이 아니야!", emote:"blush"},
@@ -408,7 +408,7 @@ registerScenes({
       {say:"narae", text:"선물은 타이밍이에요. 비싼 거 말고, 딱 필요한 순간에."},
       {say:"narae", text:"뛰고 난 뒤, 울고 난 뒤, 시험 끝난 뒤. 그때 건네는 과자 하나가 반지보다 세요."},
       {say:"me", text:"…반지는 좀 이르죠."},
-      {say:"narae", text:"당연하죠! 고2가 무슨 반지! 누나 심장 떨어질 뻔했네.", emote:"surprise"},
+      {say:"narae", text:"당연하죠. 고2가 무슨 반지예요! 누나 심장 떨어질 뻔했네.", emote:"surprise"},
       {if:"season=='winter' && day>=22 && day<=24", goto:"winter"},
       {say:"narae", text:"아무튼, 그 애가 힘든 날 뭘 찾는지 봐 둬요. 그게 답이에요."},
       {jump:"end"},
@@ -418,7 +418,7 @@ registerScenes({
       {fx:"heart"},
       {think:"…24일 밤. 왜 다들 그날을 얘기하는 걸까."},
       {label:"end"},
-      {say:"narae", text:"상담비는 매출로 받을게요~ 뭐 살래요?"}
+      {say:"narae", text:"상담비는 매출로 받을게요. 뭐 살래요?"}
     ]
   },
 
@@ -427,10 +427,10 @@ registerScenes({
     steps: [
       {show:"eunjung", pos:"left", anim:"in"},
       {show:"narae", pos:"right"},
-      {say:"eunjung", text:"…또 왔네, 하늘고. 군것질 이렇게 자주 하면 엄마가 걱정해."},
+      {say:"eunjung", text:"…또 왔네, 하늘고. 군것질 이렇게 자주 하면 엄마가 걱정하셔."},
       {say:"me", text:"안녕하세요, 점장님."},
-      {say:"eunjung", text:"인사는 됐고. 밥은 먹었어? 얼굴이 밥을 안 먹은 얼굴이야."},
-      {say:"narae", text:"점장님, 그 얼굴 판독기 좀 무서워요~"},
+      {say:"eunjung", text:"인사는 됐고. 밥은 먹었니? 얼굴이 밥 안 먹은 얼굴이야."},
+      {say:"narae", text:"점장님 얼굴 판독기, 가끔 무섭다니까요."},
       {say:"eunjung", text:"넌 조용히 해. …이거. 폐기 나온 거야. 팔면 안 되니까 먹어 치워."},
       "점장님이 계산대 너머로 삼각김밥 두 개를 밀어 놓았다. 아직 따뜻했다.",
       {think:"…폐기가 따뜻할 리가 없는데."},
@@ -450,13 +450,13 @@ registerScenes({
       {say:"eunjung", text:"너, 우리 나래한테 연애 상담 받으러 오는 애지? 얼굴에 써 있어."},
       {say:"me", text:"어, 어떻게 아셨어요?"},
       {say:"eunjung", text:"이 편의점 안에서 내가 모르는 건 유통기한밖에 없어. …농담이야."},
-      {say:"narae", text:"점장님도 상담해 주세요! 결혼 선배잖아요!"},
+      {say:"narae", text:"점장님도 상담 좀 해 주세요. 결혼 선배잖아요!"},
       {say:"eunjung", text:"결혼이랑 연애는 다른 과목이야. 근데 하나만 말해줄게."},
       {say:"eunjung", text:"좋아하는 애 앞에서 착한 척하지 마. 착한 척은 3개월이면 들통나."},
-      {say:"eunjung", text:"그냥 네 모양대로 있어. 그걸 좋아해 주는 애가 진짜야."},
-      "팔짱을 낀 채로 말하는데, 이상하게 그 말이 오래 남았다.",
+      {say:"eunjung", text:"그냥 생긴 대로 있어. 그런 널 좋아해 주는 애가 진짜야."},
+      "팔짱을 낀 채 툭 던진 말이었다. 나도 모르게 고개를 끄덕였다.",
       {say:"narae", text:"…점장님, 지금 좀 멋있었어요.", emote:"surprise"},
-      {say:"eunjung", text:"매출이나 올려. 이 손님도 뭐 좀 사고.", emote:"neutral"},
+      {say:"eunjung", text:"매출이나 올려. …너도 뭐 좀 사 가고.", emote:"neutral"},
       {hide:"eunjung"}
     ]
   }
@@ -475,8 +475,8 @@ registerScenes({
       {say:"t_moon", text:"{N}. 점심은 먹었어요? …저기 보여요? 공연장 바닥."},
       "창 너머 야외공연장. 낡은 문양이 햇빛 각도에 따라 나타났다 사라졌다.",
       {if:"day<10", goto:"early"},
-      {say:"me", text:"선생님 버전 전설이요. 1년 전의 그 사람한테 닿는다는 거. 자꾸 생각나요."},
-      {say:"t_moon", text:"아직도 그 얘기 생각해요? 도윤이 버전보다 오래 남죠? 후후."},
+      {say:"me", text:"선생님 버전 전설이요. 1년 전의 그 사람한테 닿는다는 거, 자꾸 생각나요."},
+      {say:"t_moon", text:"아직도 그 얘기 생각해요? 도윤 씨 버전보다 오래 남죠?"},
       {say:"t_moon", text:"그날 말 안 한 게 있어요. 왜 하필 옛사랑이 아니라, 1년 전일까."},
       {say:"t_moon", text:"옛사랑은 이미 끝난 사람이잖아요. 1년 전의 그 사람은, 아직 시작도 안 한 사람이고."},
       {say:"me", text:"1년 전이면… 아직 아무 일도 없었을 때잖아요."},
@@ -498,7 +498,7 @@ registerScenes({
       {say:"t_moon", text:"있죠. 근데 점심시간에 하기엔 좀 긴 얘기예요."},
       {say:"t_moon", text:"시험 끝나면 물어봐요. 그때쯤이면 저 무늬도 비에 씻겨서 잘 보일 거예요."},
       {label:"end"},
-      {say:"t_moon", text:"자, 5교시 늦지 말고. 국어는 내 시간이니까 봐주지만 수학은 안 봐줘요.", emote:"laugh"},
+      {say:"t_moon", text:"자, 5교시 늦지 말고요. 국어 시간이면 봐주겠지만, 수학은 안 봐줘요.", emote:"laugh"},
       {hide:"t_moon"}
     ]
   },
@@ -518,11 +518,11 @@ registerScenes({
       {say:"t_moon", text:"그러니까 그 줄은 숙제가 아니에요. 연습이에요. 언젠가 진짜로 말할 때를 위한."},
       {choice:[
         {text:"…써 볼게요.", stat:{sense:1}, goto:"write"},
-        {text:"선생님은 결국 말했어요?", goto:"ask"}
+        {text:"선생님은 결국 말씀하셨어요?", goto:"ask"}
       ]},
       {label:"write"},
       {say:"t_moon", text:"좋아요. 이름은 안 써도 돼요. 문장만."},
-      {text:{when:"lead=='seoha'", then:"빈칸에 볼펜을 댔다. 서하의 얼굴이 먼저 떠올라서 조금 당황했다.", else:{when:"lead=='ina'", then:"빈칸에 볼펜을 댔다. 이나의 얼굴이 먼저 떠올라서 조금 당황했다.", else:"빈칸에 볼펜을 댔다. {H}의 얼굴이 먼저 떠올라서 조금 당황했다."}}},
+      {text:{when:"lead=='seoha'", then:"빈칸에 볼펜을 댔다. 제일 먼저 서하의 얼굴이 떠올랐다. 펜 끝이 잠깐 멈췄다.", else:{when:"lead=='ina'", then:"빈칸에 볼펜을 댔다. 제일 먼저 이나의 얼굴이 떠올랐다. 펜 끝이 잠깐 멈췄다.", else:"빈칸에 볼펜을 댔다. 제일 먼저 {H}의 얼굴이 떠올랐다. 펜 끝이 잠깐 멈췄다."}}},
       {fx:"heart"},
       {jump:"end"},
       {label:"ask"},
@@ -540,7 +540,7 @@ registerScenes({
       "점심시간 복도. 박 선생님이 팔짱을 낀 채 벽에 붙은 시험 시간표를 보고 있었다.",
       {show:"t_park", pos:"center"},
       {say:"t_park", text:"{N}. 지난 쪽지시험, 계산은 맞았는데 풀이가 없더군. 0점 처리했다."},
-      {say:"me", text:"네!? 답은 맞았는데요…"},
+      {say:"me", text:"네? 답은 맞았는데요…"},
       {say:"t_park", text:"답만 맞는 건 찍은 것과 구분이 안 돼. 나는 과정을 채점한다. 예외 없이."},
       {say:"t_park", text:"태오도 예외 아니야. 걔도 1학년 때 나한테 0점 두 번 받았어."},
       {think:"…전교 1등이 0점을? 그게 더 무섭다."},
@@ -566,7 +566,7 @@ registerScenes({
     steps: [
       {sethero:"top"},
       {bg:"classroom2", time:"noon"},
-      "옆 반 교실 앞. 박 선생님이 나를 손가락으로 불렀다. 좋은 예감은 아니었다.",
+      "옆 반 교실 앞. 박 선생님이 손가락을 까딱여 나를 불렀다. 좋은 예감은 아니었다.",
       {show:"t_park", pos:"center"},
       {say:"t_park", text:"{N}. 학생부에 제보가 들어왔다. 네가 여학생이랑 자주 다닌다고."},
       {say:"me", text:"…그게 문제가 되나요?"},
@@ -584,7 +584,7 @@ registerScenes({
       {say:"t_park", text:"청소 일주일. 제보의 대가는 공정해야지.", emote:"neutral"},
       "박 선생님 입가가 아주 조금 올라갔다. 처음 보는 표정이었다.",
       {label:"end"},
-      {say:"t_park", text:"…{H}인가. 그 학생. 성실해. 너도 그만큼은 해라."},
+      {say:"t_park", text:"…{H}인가. 그 학생, 성실하지. 너도 그만큼은 해라."},
       {think:"…학생부는 소문을 안 다룬다면서요."},
       {hide:"t_park"}
     ]
@@ -596,9 +596,9 @@ registerScenes({
       {bg:"school_yard", time:"noon"},
       "점심시간 교정. 운동장 쪽에서 호루라기 소리가 세 번 울렸다. 나를 부르는 거였다.",
       {show:"t_kang", pos:"center", anim:"jump"},
-      {say:"t_kang", text:"{N}! 밥 먹고 바로 앉아 있으면 위장이 운다! 열 바퀴!", emote:"exclaim"},
+      {say:"t_kang", text:"{N}, 밥 먹고 바로 앉아 있으면 위장이 운다. 열 바퀴!", emote:"exclaim"},
       {say:"me", text:"저 방금 급식 먹었는데요…"},
-      {say:"t_kang", text:"그러니까 뛰라는 거다! 소화는 다리로 하는 거야!"},
+      {say:"t_kang", text:"그러니까 뛰라는 거다. 소화는 다리로 하는 거야!"},
       {choice:[
         {text:"뛴다.", stat:{fitness:2}, goto:"run"},
         {text:"선생님도 같이 뛰시죠.", goto:"together"},
@@ -607,7 +607,7 @@ registerScenes({
       {label:"run"},
       {fx:"shake"},
       "열 바퀴. 다섯 바퀴째부터 급식이 목까지 올라왔다. 여덟 바퀴째엔 내려갔다.",
-      {say:"t_kang", text:"봐라! 위장이 자리를 찾았지! 그게 과학이다!", emote:"laugh"},
+      {say:"t_kang", text:"봐라, 위장이 자리를 찾았지? 그게 과학이다!", emote:"laugh"},
       {jump:"end"},
       {label:"together"},
       {say:"t_kang", text:"…오, 도발이냐. 좋다. 나는 반대 방향으로 뛴다. 만나면 진 거다!"},
@@ -619,7 +619,7 @@ registerScenes({
       {say:"t_kang", text:"배가 아파? …그럼 보건실 가. 진짜 아프면 뛰는 거 아니다.", emote:"neutral"},
       "의외로 순순히 물러섰다. 호랑이도 아픈 사람은 안 무는 모양이었다.",
       {label:"end"},
-      {say:"t_kang", text:"오후 수업 잘 듣고! 졸면 내가 창문 밖에서 본다!"},
+      {say:"t_kang", text:"오후 수업 잘 듣고. 졸면 내가 창문 밖에서 다 본다!"},
       {hide:"t_kang"}
     ]
   },
@@ -633,7 +633,7 @@ registerScenes({
       {show:"t_kang", pos:"center"},
       {say:"t_kang", text:"{N}. 너 요즘 눈빛이 흐리다. 사랑이냐?"},
       {say:"me", text:"…왜 다들 저한테 그걸 물어보죠."},
-      {say:"t_kang", text:"얼굴에 써 있으니까! 체육 선생은 얼굴로 컨디션을 읽는다!"},
+      {say:"t_kang", text:"얼굴에 써 있으니까. 체육 선생은 얼굴로 컨디션을 읽는다!"},
       {say:"t_kang", text:"잘 들어. 연애는 계주다. 바통은 네가 먼저 내밀어야 상대가 받아."},
       {say:"t_kang", text:"기다리기만 하면 바통 떨어진다. 떨어지면 실격이야. 알겠나!", emote:"exclaim"},
       "농구공이 내 쪽으로 날아왔다. 얼떨결에 받았다.",
@@ -646,9 +646,9 @@ registerScenes({
       {say:"t_kang", text:"그럼 주우러 가서 다시 내밀어. 계주는 원래 그런 거다. 몇 번이고.", emote:"laugh"},
       {jump:"end"},
       {label:"yes"},
-      {say:"t_kang", text:"목소리 좋다! 그 목소리로 그 애한테도 말해라!"},
+      {say:"t_kang", text:"목소리 좋다. 그 목소리로 그 애한테도 말해라!"},
       {label:"end"},
-      "공을 돌려주자 선생님은 뒤도 안 보고 슛을 던졌다. 들어갔다. 얄미울 정도로.",
+      "공을 돌려주자 선생님은 골대도 안 보고 슛을 던졌다. 들어갔다. 얄미울 정도로.",
       {hide:"t_kang"}
     ]
   }
@@ -662,13 +662,13 @@ registerScenes({
     title: "미술실 - 아무도 없는 이젤",
     steps: [
       "미술실. 이젤 몇 개가 창 쪽을 보고 서 있었다. 사람은 없었다.",
-      "구석 이젤에 걸린 스케치. 벚꽃 아래 교문, 그리고 뒷모습 하나.",
+      "구석 이젤에 스케치가 한 장 걸려 있었다. 벚꽃 아래 교문, 그리고 뒷모습 하나.",
       {think:"…이거, 어디서 본 것 같은데. 누구 뒷모습이지."},
       {show:"seokhwan", pos:"center", anim:"in"},
-      {say:"seokhwan", text:"아, {N}! 그거 보지 마! 아니, 내 거 아니고, 그냥, 누가…", emote:"sweat"},
+      {say:"seokhwan", text:"아, {N}! 그거 보지 마. 아니, 내 거 아니고, 그냥, 누가…", emote:"sweat"},
       {say:"seokhwan", text:"…나는 별자리 포스터 말리러 온 거야. 미술부 애들이 안 보이길래."},
       {say:"me", text:"근데 왜 네가 당황해."},
-      {say:"seokhwan", text:"그, 그림 주인이 화내면 무서우니까! 조용한 애가 화내면 제일 무섭잖아!"},
+      {say:"seokhwan", text:"그, 그림 주인이 화내면 무서우니까. 조용한 애가 화내면 제일 무섭잖아!"},
       "석환은 포스터를 안고 도망치듯 나갔다. 스케치는 그대로 창을 보고 있었다.",
       {hide:"seokhwan"}
     ]
@@ -677,14 +677,14 @@ registerScenes({
   "loc_nurse_room_generic": {
     title: "보건실 - 쿨가이의 낮잠",
     steps: [
-      "보건실. 소독약 냄새와 커튼 사이로 규칙적인 숨소리가 들렸다.",
+      "보건실. 소독약 냄새가 났다. 커튼 너머로 규칙적인 숨소리가 들렸다.",
       {show:"jiho", pos:"center"},
       {say:"jiho", text:"…아. 들켰네. 밴드부 밤샘 연습이었어. 선생님한텐 두통이라고 했고."},
       {say:"me", text:"보건 선생님은?"},
       {say:"jiho", text:"회의. 30분 뒤에 온대. 그 안에 자야 돼. …너도 누울래? 침대 두 개야."},
       {choice:[
         {text:"옆 침대에 눕는다.", goto:"lie"},
-        {text:"깨우지 않고 나간다.", goto:"leave"}
+        {text:"방해하지 않고 나간다.", goto:"leave"}
       ]},
       {label:"lie"},
       "커튼 너머로 지호가 낮게 흥얼거렸다. 축제 곡인 것 같았다.",
@@ -737,7 +737,7 @@ registerScenes({
       {say:"me", text:"…쓰긴 하는데. 왜."},
       {say:"minjae", text:"나도 깔았거든? 근데 내 건 실루엣이 안 나와. 그냥 까만 화면이야.", emote:"sad"},
       {say:"seokhwan", text:"그건 민재가 좋아하는 사람이 없어서 그런 거 아닐까…"},
-      {say:"minjae", text:"야! 있거든! 매주 바뀌어서 그렇지!", emote:"angry"},
+      {say:"minjae", text:"야! 있거든. 매주 바뀌어서 그렇지.", emote:"angry"},
       {say:"seokhwan", text:"…앱이 계산을 못 하겠네.", emote:"sweat"},
       "석환의 한마디에 민재가 무너졌다. 나는 폰을 주머니 깊이 넣었다.",
       {think:"…민재 건 안 나오고 내 건 나온다. 왜지."},
@@ -749,7 +749,7 @@ registerScenes({
   "loc_vending_generic": {
     title: "자판기 - 걸린 캔",
     steps: [
-      "자판기 앞. 동전을 넣고 버튼을 눌렀다. 덜컹— 그리고 침묵.",
+      "자판기 앞. 동전을 넣고 버튼을 눌렀다. 덜컹. 그리고 침묵.",
       {fx:"shake"},
       {think:"…걸렸다. 300원짜리 비극."},
       {show:"minjae", pos:"center", anim:"in"},
@@ -773,7 +773,7 @@ registerScenes({
       "1층 복도. 창가에 기타 케이스가 하나 세워져 있었다. 주인은 없었다.",
       {show:"jiho", pos:"center", anim:"in"},
       {say:"jiho", text:"…내 거. 화장실 갔다 왔어. 훔치려고 했냐?"},
-      {say:"me", text:"안 훔쳐. 무거워 보여."},
+      {say:"me", text:"안 훔쳐. 무거워 보이는데."},
       {say:"jiho", text:"무거워. 근데 안 들면 더 무거워. 이상하지."},
       "지호는 케이스를 메고 잠깐 창밖을 봤다. 운동장 끝에서 누군가 뛰고 있었다.",
       {say:"jiho", text:"…하늘이가 그러더라. 너 요즘 눈이 바쁘다고. 좋은 뜻이래."},
@@ -832,7 +832,7 @@ registerScenes({
       {jump:"end"},
       {label:"winter"},
       {fx:"snow"},
-      "눈이 얇게 쌓인 길. 발자국이 나 하나뿐이었다. 폰이 울렸다.",
+      "눈이 얇게 쌓인 길. 발자국은 내 것뿐이었다. 폰이 울렸다.",
       {msg:{from:"app", text:{
         seoyoon:"야. 12월 24일. 비워 둬. 그 애도 그날 아무 약속 안 잡을 거야.",
         daeun:"…12월 24일. 저기, 그날은… 비워 둬. 그 애도 그날을 기다리고 있으니까.",
@@ -851,8 +851,8 @@ registerScenes({
       "동네 놀이터. 그네 옆 화단에 누군가 쭈그리고 앉아 있었다. 손에 잠자리채.",
       {show:"dahoon", pos:"center", anim:"in"},
       {say:"dahoon", text:"쉿! …아, 학생. 미안. 여기 희귀한 애가 있어서. 가만히, 가만히."},
-      "다훈 씨가 숨을 멈췄다. 나도 따라 멈췄다. 뭔지도 모르면서.",
-      {say:"dahoon", text:"…놓쳤다. 괜찮아, 다음 주에 또 나와. 곤충생태관 정다훈. 다은이 오빠."},
+      "잠자리채를 든 남자가 숨을 멈췄다. 나도 따라 멈췄다. 뭔지도 모르면서.",
+      {say:"dahoon", text:"…놓쳤다. 괜찮아, 다음 주면 또 나와. 나는 곤충생태관 정다훈. 다은이 오빠야."},
       {say:"me", text:"아, 다은이 오빠요?"},
       {say:"dahoon", text:"그래. 걔가 요즘 스케치북에 자꾸 남자애 그리길래 누군가 했더니… 너냐?"},
       {choice:[
@@ -860,14 +860,14 @@ registerScenes({
         {text:"저 아닐 거예요.", goto:"deny"}
       ]},
       {label:"maybe"},
-      {say:"dahoon", text:"그 표정 곤충이면 '보호색'이야. 들켰다는 뜻.", emote:"laugh"},
+      {say:"dahoon", text:"그 표정, 곤충으로 치면 '보호색'이야. 숨는 중이라는 뜻이지.", emote:"laugh"},
       {jump:"end"},
       {label:"deny"},
-      {say:"dahoon", text:"그래? 그럼 잘 됐네. 걔 그림 실력이 갑자기 늘어서 걱정했거든.", emote:"neutral"},
+      {say:"dahoon", text:"그래? 그럼 잘됐네. 걔 그림 실력이 갑자기 늘어서 걱정했거든.", emote:"neutral"},
       {label:"end"},
       {say:"dahoon", text:"생태관 놀러 와. 나비관, 요즘 어둡게 해 놨어. 둘이 오면 더 좋고."},
       {hide:"dahoon"},
-      "다훈 씨는 잠자리채를 어깨에 걸고 휘파람을 불며 갔다. 다은과 하나도 안 닮았다."
+      "다훈 씨는 잠자리채를 어깨에 걸고 휘파람을 불며 갔다. 다은이랑은 하나도 안 닮았다."
     ]
   },
 
@@ -876,17 +876,17 @@ registerScenes({
     steps: [
       {text:{when:"flag.alba_open", then:"카페 Forin 앞. 도윤 씨가 간판 아래서 담배 대신 커피를 마시고 있었다.", else:"카페 Forin 앞. 사장님으로 보이는 아저씨가 간판 아래서 커피를 마시고 있었다."}},
       {show:"doyoon", pos:"center"},
-      {say:"doyoon", text:{when:"flag.alba_open", then:"어, {N}. 하늘이 오늘 늦어. 학교 일. 들어와서 기다릴래?", else:"구경 왔어? 문 열려 있어. 들어와서 한 잔 하고 가."}},
+      {say:"doyoon", text:{when:"flag.alba_open", then:"어, {N}. 하늘이는 오늘 학교 일로 늦어. 들어와서 기다릴래?", else:"구경 왔어? 문 열려 있어. 들어와서 한 잔 하고 가."}},
       {if:"day<10", goto:"early"},
-      {say:"me", text:"괜찮아요. …근데 도윤 씨, 저번에 마법진 얘기요."},
-      {say:"doyoon", text:"아, 그거. 문 선생이 뭐라고 하디? 1년 전 어쩌고?"},
+      {say:"me", text:"괜찮아요. …근데 사장님, 저번에 하신 마법진 얘기요."},
+      {say:"doyoon", text:"아, 그거. 문 선생은 뭐래? 1년 전 어쩌고 하지?"},
       {say:"me", text:"네. 옛사랑이 아니라 1년 전의 그 사람이라고요."},
-      {say:"doyoon", text:"…그 사람은 늘 정확해. 나는 낭만파고. 근데 내 버전엔 뒷얘기가 있어."},
+      {say:"doyoon", text:"…문 선생은 늘 정확해. 나는 낭만파고. 근데 내 버전엔 뒷얘기가 있어."},
       {say:"doyoon", text:"나 그날 밤 빌었어. 좋아하는 애한테 닿으라고. 근데 그 애, 다음 날 나한테 오더라."},
       {say:"doyoon", text:"'너 혹시 나한테 할 말 있어?' 하고. 나는 없다고 했어. 무서워서."},
       {say:"me", text:"…그게 늦었다는 거예요?"},
       {say:"doyoon", text:"응. 소원은 닿았는데 내가 안 받았어. 닿는 거랑 잡는 건 다르더라."},
-      "도윤 씨가 커피잔을 돌렸다. 바닥에 남은 원이 마법진처럼 보였다.",
+      "도윤 씨가 커피잔을 돌렸다. 잔 바닥에 남은 동그란 자국이 마법진처럼 보였다.",
       {say:"doyoon", text:"…하늘이한테는 이 얘기 하지 마. 삼촌 체면이 있지.", emote:"laugh"},
       {hide:"doyoon"},
       "닿는 것과 잡는 것. 카페 종소리가 등 뒤에서 한 번 울렸다.",
@@ -909,7 +909,7 @@ registerScenes({
       {say:"me", text:"…그게 재미있어요?"},
       {say:"narae", text:"세상에서 제일 재밌죠. 남의 사랑은 결말을 미리 알 것 같거든요. 내 건 모르는데."},
       "나래 씨가 남은 국물을 한 번에 마셨다. 점장님이 유리문 안에서 손가락 하나를 들었다.",
-      {say:"narae", text:"1분! 가야겠다. 밤에 와요. 상담은 밤에만 해요~"},
+      {say:"narae", text:"1분 남았대요. 가야겠다. 밤에 와요. 상담은 밤에만 하거든요."},
       {hide:"narae"}
     ]
   },
@@ -919,8 +919,8 @@ registerScenes({
     steps: [
       "주택가 입구. 저 멀리서 규칙적인 발소리가 다가왔다. 육상부치곤 무거웠다.",
       {show:"gymowner", pos:"center", anim:"in"},
-      {say:"gymowner", text:"허, 허… 학생! 잠깐 스톱! 관장이야, 저기 체육관. 마강수."},
-      {say:"gymowner", text:"서윤이 코치 하는데, 요즘 걔 기록이 들쭉날쭉이야. 학교에서 뭔 일 있냐?"},
+      {say:"gymowner", text:"허, 허… 학생, 잠깐 스톱! 나 저기 체육관 관장, 마강수야."},
+      {say:"gymowner", text:"내가 서윤이 코치거든. 요즘 걔 기록이 들쭉날쭉해. 학교에서 무슨 일 있냐?"},
       {choice:[
         {text:"잘 모르겠는데요.", goto:"dunno"},
         {text:"…제가 물어볼까요?", goto:"ask"}
@@ -946,14 +946,14 @@ registerScenes({
     title: "주말 아침 - 집",
     steps: [
       {bg:"town_entrance", time:"morning"},
-      "주말 아침. 알람 없이 눈을 떴는데도 어쩐지 평일보다 일찍이었다.",
+      "주말 아침. 알람도 없이 눈을 떴는데, 평일보다 이른 시간이었다.",
       {show:"mom", pos:"left"},
       {show:"dad", pos:"right"},
       {say:"mom", text:"어머, 주말인데 일찍 일어났네? 어디 가? 누구 만나?"},
       {say:"dad", text:"…여보, 아침부터 취조하지 마."},
       {say:"mom", text:"취조 아니야. 관심이야. 당신은 관심이 없어서 그래."},
       {say:"dad", text:"…{N}. 나갈 거면 너무 늦지는 말고."},
-      "아빠는 신문 뒤로 숨었고, 엄마는 도시락 통을 하나 더 꺼냈다. 두 개였다.",
+      "아빠는 신문 뒤로 숨었고, 엄마는 찬장에서 도시락 통을 꺼냈다. 두 개였다.",
       {say:"mom", text:"혹시 몰라서. 하나는 네 거, 하나는… 아무나."},
       {think:"…엄마 눈치는 앱보다 빠르다."},
       {hide:"mom"},

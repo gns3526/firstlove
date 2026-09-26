@@ -15,9 +15,11 @@
 .after-reader img.after-figure[data-character-effects] {
   --character-key-filter: brightness(1);
   --character-base-light: 1;
+  --character-base-sat: 1;
   --character-base-blur: 0px;
   filter: var(--character-key-filter)
     brightness(calc(var(--character-base-light) * var(--character-enter-light)))
+    saturate(var(--character-base-sat))
     blur(calc(var(--character-base-blur) + var(--character-enter-blur)))
     drop-shadow(0 3px 7px rgb(13 28 42 / 16%));
 }
@@ -29,7 +31,8 @@
 .after-reader img.after-figure[data-character-effects][src*="cinemaKey=v16"][src*="keyProfile=paint"] {
   --character-key-filter: url(#cinema-v16-key-paint);
 }
-#layer_chars img.spr[data-character-effects].dimmed { --character-base-light: .62; }
+/* 듣는 사람: 한 톤 어둡고 채도를 낮춰 말하는 사람과 확실히 갈리게 한다. */
+#layer_chars img.spr[data-character-effects].dimmed { --character-base-light: .5; --character-base-sat: .7; }
 #layer_chars img.spr[data-character-effects].sil {
   --character-base-light: 0;
   --character-base-blur: 2px;

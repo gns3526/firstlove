@@ -190,13 +190,13 @@ window.V6_ART_LINKS = [
     "id": "yuri_shared_earphone",
     "scene": "enc_yuri_spring_morning",
     "index": 7,
-    "anchor": "유리가 이어폰 한 쪽을 빼서 내밀었다. 줄이 짧아서, 붙어야 들린다."
+    "anchor": "유리가 이어폰 한쪽을 빼서 내밀었다. 줄이 짧아서 바짝 붙어야 들렸다."
   },
   {
     "id": "yuri_stair_rehearsal",
     "scene": "enc_yuri_spring_noon",
     "index": 17,
-    "anchor": "이번엔 목소리가 흔들리지 않았다. 계단 두 칸 위에서 유리는 나만 봤다."
+    "anchor": "유리가 일어나 한 칸 더 올라섰다. 이번엔 목소리가 흔들리지 않았다. 유리는 나만 봤다."
   },
   {
     "id": "yuri_training_finish",
@@ -214,6 +214,6 @@ window.V6_ART_LINKS = [
     "id": "yuri_curb_balance",
     "scene": "walkhome_yuri_spring",
     "index": 4,
-    "anchor": "휘청. 손이 내 어깨를 잡았다. 그리고 그대로 손을 잡고 걸었다."
+    "anchor": "휘청. 유리의 손이 내 어깨를 붙잡았다. 그러고는 그대로 내 손을 잡고 걸었다."
   }
 ];

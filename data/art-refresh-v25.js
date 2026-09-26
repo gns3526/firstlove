@@ -58,7 +58,7 @@
       "title": "민재 — 옆자리의 안내자",
       "wide": "assets/art_refresh/production-v25/batch-01/prologue-minjae-welcome-wide.webp",
       "scene": "prologue",
-      "anchor": "이 반의 정보통이자 인간 내비게이션.",
+      "anchor": "어서 와, 전학생. 난 강민재. 이 반 정보통이자 인간 내비게이션이지.",
       "hold": 3
     },
     {
@@ -66,7 +66,7 @@
       "title": "서윤 — 돌아온 가방",
       "wide": "assets/art_refresh/production-v25/batch-01/prologue-seoyoon-return-bag-wide.webp",
       "scene": "prologue",
-      "anchor": "그녀는 어이없다는 듯 웃더니 내 가방을 집어 던져줬다.",
+      "anchor": "그 애는 어이없다는 듯 웃더니 내 가방을 집어 휙 던져 줬다.",
       "hold": 3
     },
     {
@@ -74,7 +74,7 @@
       "title": "서윤 — 초코바 절반",
       "wide": "assets/art_refresh/production-v25/batch-01/prologue-seoyoon-chocolate-wide.webp",
       "scene": "prologue",
-      "anchor": "그렇게 말하면서 초코바 봉지를 뜯었다.",
+      "anchor": "말은 그렇게 하면서 서윤은 봉지를 뜯었다. 초코바를 반으로 뚝 잘라 내밀었다.",
       "hold": 2
     },
     {
@@ -98,7 +98,7 @@
       "title": "유리 — 늦은 자기소개",
       "wide": "assets/art_refresh/production-v25/batch-01/prologue-yuri-introduction-wide.webp",
       "scene": "prologue",
-      "anchor": "헤헤, 차유리입니다!! 아이돌 지망생이에요",
+      "anchor": "헤헤, 차유리입니다! 아이돌 지망생이에요~ 노래는 시켜 주시면 언제든지요.",
       "hold": 3
     },
     {

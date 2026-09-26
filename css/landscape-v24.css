@@ -16,6 +16,7 @@
 #stage.landscape #layer_ui>.dlg { left:0;top:474px;width:100%;height:246px; }
 #stage.landscape #layer_ui>.dlg:before { top:-100px;width:100%;height:346px; }
 #stage.landscape #layer_ui>.dlg .dlg-name { left:64px;top:12px;font-size:30px; }
+#stage.landscape #layer_ui>.dlg.speaker-right .dlg-name { left:auto;right:64px; }
 #stage.landscape #layer_ui>.dlg .dlg-text { left:66px;top:65px;width:calc(100% - 132px);height:154px;font-size:31px;line-height:1.55; }
 #stage.landscape #layer_ui>.dlg.noname .dlg-text { top:40px;height:184px; }
 #stage.landscape #layer_ui>.dlg .dlg-next { right:34px;bottom:22px;font-size:23px; }

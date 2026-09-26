@@ -68,7 +68,7 @@ window.CONFIG = {
     gymowner:{ name:"마강수 관장", role:"adult" },
     seojun:  { name:"한서준", role:"adult" },
     dahoon:  { name:"정다훈", role:"adult" },
-    ari:     { name:"차아리", role:"adult" },
+    ari:     { name:"차아리", role:"adult", stageName:"AKI", revealFlag:"yuri_sister" },
     guard:   { name:"경호원", role:"adult" },
     me:  { name:"{N}", role:"me" },
     app: { name:"???", role:"app" },

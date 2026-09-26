@@ -209,7 +209,7 @@
     vn.reset(); G.ui.topbar(true); vn.bg("classroom1", { time: "noon", trans: "cut" });
     vn.show(h, { pos: "center" });
     try {
-      await vn.say(null, "점심시간, 교실에서 " + G.givenName(h) + G.josa(G.givenName(h), "와과") + " 마주쳤다. 챙겨 둔 간식을 가방에서 꺼냈다.");
+      await vn.say(null, "점심시간, 교실에서 " + G.givenName(h) + G.josa(G.givenName(h), "와과") + " 눈이 마주쳤다. 챙겨 둔 간식을 가방에서 꺼냈다.");
       var delivered = await ph.deliverGift(h);
       if (delivered) G.state.metToday = h;
       return delivered;
@@ -276,7 +276,7 @@
   day.date = async function () {
     if (G.state.invite && G.state.inviteDay >= 0 && G.state.inviteDay !== G.state.dayIdx) { G.state.invite = ""; G.state.inviteDay = -1; }
     var h = G.state.invite || null;
-    if (!h) { h = await hub.heroineSelect("누구와 데이트?", function (x) { return day.canDate(x); }); if (!h) return false; }
+    if (!h) { h = await hub.heroineSelect("누구와 데이트할까?", function (x) { return day.canDate(x); }); if (!h) return false; }
     var dateMusic = G.music && typeof G.music.enterScene === "function" && typeof G.music.leaveScene === "function" ? G.music : null;
     var musicToken = dateMusic && dateMusic.enterScene("date_activity", { h: h, heroine: h, season: G.season(), slot: "afternoon" });
     try {
@@ -305,7 +305,7 @@
       if (vn.exists("date_start_generic")) await vn.run("date_start_generic", { h: h });
       if (G.state.pendingGift && G.state.pendingGift.heroine === h) {
         vn.show(h, { pos: "center" });
-        await vn.say(null, "약속 장소에 도착한 " + G.givenName(h) + G.josa(G.givenName(h), "와과") + " 인사를 나눴다.");
+        await vn.say(null, "약속 장소에서 " + G.givenName(h) + G.josa(G.givenName(h), "와과") + " 만나 인사를 나눴다.");
         await ph.deliverGift(h);
       }
       vn.hideAll(); vn.bg(spot, { time: "afternoon" });
@@ -602,7 +602,7 @@
     try {
     G.state.slot = "night"; vn.hideAll(); vn.hideDlg();
     await vn.title("밤의 학교", "자정 · 발소리를 죽이고");
-    var path = [["school_gate", "교문은 잠겨 있지 않았다. 마치 누군가 열어둔 것처럼."], ["school_yard", "달빛 아래 교정. 낮과는 전혀 다른 곳 같았다."], ["school_entrance", "건물 입구. 안쪽 복도에서 무언가 움직이는 소리."], ["hallway1", "복도의 창문마다 달이 하나씩 떠 있었다."]];
+    var path = [["school_gate", "교문은 잠겨 있지 않았다. 마치 누군가 열어둔 것처럼."], ["school_yard", "달빛 아래 교정. 낮과는 전혀 다른 곳 같았다."], ["school_entrance", "건물 입구. 안쪽 복도에서 무언가 움직이는 소리가 났다."], ["hallway1", "복도의 창문마다 달이 하나씩 떠 있었다."]];
     var encounterAt = 1 + Math.floor(G.rng() * 2);
     for (var i = 0; i < path.length; i++) {
       vn.bg(path[i][0], { time: "night" });
@@ -640,6 +640,6 @@
   // ---------- fallbacks (used only if writer scenes are missing) ----------
   registerScenes({
     "__noprologue": { steps: [{ name: "prompt" }, { bg: "school_gate" }, "전학 첫날. 벚꽃이 흩날렸다. (프롤로그 씬이 없어 임시 진행)", { aff: { seoyoon: 5 } }] },
-    "__fallback_date": { steps: ["도착했다.", { show: "$h", pos: "center" }, { say: "$h", text: "…왔네. 그럼, 시작해볼까." }, { minigame: "actiontalk", who: "$h" }, { if: "flag.at=='great'", goto: "g" }, { say: "$h", text: "…재밌었어." }, { jump: "e" }, { label: "g" }, { fx: "hearts" }, { say: "$h", text: "오늘… 정말 좋았어.", emote: "blush" }, { label: "e" }] }
+    "__fallback_date": { steps: ["도착했다.", { show: "$h", pos: "center" }, { say: "$h", text: "…왔네. 그럼, 가 볼까?" }, { minigame: "actiontalk", who: "$h" }, { if: "flag.at=='great'", goto: "g" }, { say: "$h", text: "…재밌었어." }, { jump: "e" }, { label: "g" }, { fx: "hearts" }, { say: "$h", text: "오늘… 정말 좋았어.", emote: "blush" }, { label: "e" }] }
   });
 })();

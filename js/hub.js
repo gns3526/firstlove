@@ -703,7 +703,7 @@
     var t = G.ui.el("div", "t", "", hdr); t.textContent = G.charName(h) + "의 의상";
     G.ui.el("div", "", "width:64px;flex:none", hdr);
     var grid = G.ui.el("div", "fit-grid", "", p);
-    var names = { winter: "동복", spring: "춘추복", summer: "하복", winter_noglasses: "동복(안경X)", spring_noglasses: "춘추복(안경X)", default: "근무복", date_casual: "외출복", home: "집에서", track: "운동복" };
+    var names = { winter: "동복", spring: "춘추복", summer: "하복", winter_noglasses: "동복(안경X)", spring_noglasses: "춘추복(안경X)", default: "근무복", date_casual: "외출복", home: "실내복", track: "운동복" };
     Object.keys(c).forEach(function (k) {
       if (k === "dark") return;
       var unlocked = adult ? (k === "default" || G.state.aff[h] >= (k === "home" ? 60 : 30)) : (k === "spring" || k === "winter" || (k === "summer") || G.state.unlocks.outfits[h + "_noglasses"] || G.state.aff[h] >= 60);

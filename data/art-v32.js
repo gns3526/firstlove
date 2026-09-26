@@ -290,21 +290,21 @@
         "id": "seoyoon_xmas_hands",
         "title": "서윤 — 크리스마스이브, 뜨거운 손과 차가운 손",
         "scene": "xmas_eve_seoyoon",
-        "anchor": "손이 잡혔다. 서윤 손은 뛰어와서 뜨거웠고, 내 손은 눈 맞아서 차가웠다.",
+        "anchor": "손이 잡혔다. 서윤의 손은 뛰어온 만큼 뜨거웠고, 내 손은 눈을 맞아 차가웠다.",
         "hold": 4
       },
       {
         "id": "daeun_xmas_hands",
         "title": "다은 — 크리스마스이브, 30cm를 먼저 넘은 손",
         "scene": "xmas_eve_daeun",
-        "anchor": "손을 잡았다. 다은의 손도 차가웠다. 두 개의 차가운 손이 서로를 데웠다.",
+        "anchor": "손을 잡았다. 다은의 손도 차가웠다. 차가운 손 두 개가 서로를 데웠다.",
         "hold": 5
       },
       {
         "id": "haneul_xmas_hands",
         "title": "하늘 — 크리스마스이브, 앞치마째 달려온 밤",
         "scene": "xmas_eve_haneul",
-        "anchor": "손을 잡았다. 하늘의 손도 차가웠다. 두 개의 차가운 손이 서로를 데웠다.",
+        "anchor": "손을 잡았다. 하늘의 손도 차가웠다. 차가운 손 두 개가 서로를 데웠다.",
         "hold": 5
       },
       {
@@ -318,21 +318,21 @@
         "id": "seoha_xmas_hands",
         "title": "서하 — 크리스마스이브, 김 서린 안경을 쥔 채",
         "scene": "xmas_eve_seoha",
-        "anchor": "손을 잡았다. 두 개의 차가운 손이 서로를 데웠다.",
+        "anchor": "손을 잡았다. 차가운 손 두 개가 서로를 데웠다.",
         "hold": 5
       },
       {
         "id": "ina_xmas_hands",
         "title": "이나 — 크리스마스이브, 캐리어를 세워 두고 잡은 손",
         "scene": "xmas_eve_ina",
-        "anchor": "손을 잡았다. 두 개의 차가운 손이 서로를 데웠다.",
+        "anchor": "손을 잡았다. 차가운 손 두 개가 서로를 데웠다.",
         "hold": 5
       },
       {
         "id": "seoyoon_festival_fireworks",
         "title": "서윤 — 축제 밤, 뺨에 떨어지는 불꽃빛",
         "scene": "festival_seoyoon",
-        "anchor": "서윤이 하늘을 봤다. 나는 서윤을 봤다. 불꽃빛이 뺨에 색을 바꿔가며 떨어졌다.",
+        "anchor": "서윤은 하늘을 봤다. 나는 서윤을 봤다. 불꽃빛이 뺨 위로 색을 바꿔 가며 떨어졌다.",
         "hold": 4
       },
       {
@@ -346,7 +346,7 @@
         "id": "haneul_festival_fireworks",
         "title": "하늘 — 축제 밤, 눈동자에 핀 금색 불꽃",
         "scene": "festival_haneul",
-        "anchor": "첫 번째 불꽃이 터졌다. 금색. 하늘의 눈에 두 개의 불꽃이 피었다.",
+        "anchor": "첫 불꽃이 터졌다. 금색이었다. 하늘의 두 눈에 불꽃이 하나씩 피었다.",
         "hold": 4
       },
       {
@@ -423,14 +423,14 @@
         "id": "haneul_winter_scarf",
         "title": "하늘 — 겨울 바다, 두 바퀴 감아 준 목도리",
         "scene": "winter_trip_haneul",
-        "anchor": "목도리를 잡았다. 그리고 다시 하늘의 목에 둘러 줬다. 두 바퀴. 얼굴이 가까웠다.",
+        "anchor": "목도리를 붙잡아 하늘의 목에 다시 둘러 줬다. 두 바퀴. 얼굴이 가까웠다.",
         "hold": 3
       },
       {
         "id": "yuri_winter_meteor",
         "title": "유리 — 겨울 산, 3초 동안의 소원",
         "scene": "winter_trip_yuri",
-        "anchor": "별똥별이 하나 떨어졌다. 유리가 눈을 감았다. 3초.",
+        "anchor": "별똥별이 하나 떨어졌다. 유리가 3초 동안 눈을 감았다.",
         "hold": 3
       },
       {
