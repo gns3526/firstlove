@@ -204,6 +204,13 @@
   function heroName(h) { var n = fullName(h); return G.cfg.heroines.indexOf(h) >= 0 && n.length === 3 ? n.slice(1) : n; }
   function hint(e) {
     var n = heroName(e.who);
+    // 일반 미연시 진행: 숫자(호감) 없이, 이야기 속에서 한 일로 알려 준다.
+    if (G.novel && G.novel()) {
+      if (e.kind === 'final') return '진짜 결말 여섯 개를 모두 보면 문양의 빛이 모여, 타이틀에 「눈 녹은 문양」이 열린다.';
+      if (e.kind === 'normal') return '가을 축제 날까지 누구와도 가까워지지 않았다면.';
+      if (e.kind === 'hold') return n + '의 이야기에 들어섰지만, 고백의 날까지 마음이 조금 모자랐다면.';
+      return '방과 후와 주말에 ' + n + '의 곁을 자주 찾아, 가을 축제 날 그 곁에 있다면. 겨울까지 마음을 쌓으면 고백의 날에 닿는다.';
+    }
     if (e.kind === 'final') return '진짜 결말 여섯 개를 모두 보면 문양의 빛이 모여, 타이틀에 「눈 녹은 문양」이 열린다.';
     if (e.kind === 'normal') return '가을 축제 날까지 호감 50을 넘긴 사람이 없었다면.';
     if (e.kind === 'hold') return n + '의 이야기에 들어섰지만, 종업 전날 호감이 70에 닿지 못했다면.';

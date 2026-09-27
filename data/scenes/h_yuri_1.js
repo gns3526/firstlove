@@ -462,7 +462,7 @@ registerScenes({
       {show:"yuri", pos:"center", outfit:"summer"},
       {say:"yuri", text:"으으, 아침엔 맑았잖아! 하늘 배신자!", emote:"angry"},
       {choice:[
-        {text:"(우산 있음) 같이 쓰자.", cond:"has.umbrella", aff:{yuri:4}, goto:"umb"},
+        {text:"우산 같이 쓰자.", cond:"has.umbrella", aff:{yuri:4}, goto:"umb"},
         {text:"그칠 때까지 같이 기다린다.", aff:{yuri:2}, goto:"wait"},
         {text:"뛰자!", aff:{yuri:2}, goto:"dash"}
       ]},

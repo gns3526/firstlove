@@ -122,7 +122,7 @@ registerScenes({
       {choice:[
         {text:"한 소절만 더 불러줘.", aff:{yuri:3}, goto:"sing"},
         {text:"핫팩을 건넨다.", aff:{yuri:3}, goto:"hot"},
-        {text:"(호감 50 이상)목도리를 나눠 두른다", cond:"aff.yuri>=50", aff:{yuri:5}, goto:"scarf"}
+        {text:"목도리를 나눠 두른다.", cond:"aff.yuri>=50", aff:{yuri:5}, goto:"scarf"}
       ]},
       {label:"sing"},
       {say:"yuri", text:"관객 한 명 앞에서가 제일 떨려. …알았어. 한 소절만."},

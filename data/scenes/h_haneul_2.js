@@ -17,7 +17,7 @@ registerScenes({
       {say:"haneul", text:"…못 본 걸로 해 줘.", emote:"blush"},
       {choice:[
         {text:"가방 이리 줘. 교문까지 들어 줄게.", aff:{haneul:3}, goto:"bag"},
-        {text:"(초코롤이 있다면) 이거 먹고 잠 깨.", cond:"has.snack_choco", aff:{haneul:4}, item:{snack_choco:-1}, goto:"choco"},
+        {text:"초코롤 있는데, 이거 먹고 잠 깨.", cond:"has.snack_choco", aff:{haneul:4}, item:{snack_choco:-1}, goto:"choco"},
         {text:"반장이 지각하면 큰일이니까 빨리 가자.", aff:{haneul:1}, goto:"walk"}
       ]},
       {label:"bag"},
@@ -149,7 +149,7 @@ registerScenes({
       {say:"haneul", text:"버릇이야. 손이 심심하면 그려. 괜찮아, 금방 사라져."},
       {choice:[
         {text:"옆에 하나 더 그린다.", aff:{haneul:4}, goto:"draw"},
-        {text:"(필름이 있다면) 사라지기 전에 찍는다.", cond:"has.film", aff:{haneul:3}, goto:"photo"},
+        {text:"사라지기 전에 사진으로 남긴다.", cond:"has.film", aff:{haneul:3}, goto:"photo"},
         {text:"지우지 않고 그대로 둔다.", aff:{haneul:2}, goto:"leave"}
       ]},
       {label:"draw"},

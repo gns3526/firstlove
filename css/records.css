@@ -138,3 +138,19 @@
 @keyframes finalGlow{0%,100%{box-shadow:0 4px 16px #1c2f4540,0 0 14px #f5d58a44}50%{box-shadow:0 4px 16px #1c2f4540,0 0 26px #f5d58a99}}
 @media (prefers-reduced-motion:reduce){.firstlove-button.firstlove-final{animation:none}}
 @media(min-aspect-ratio:1/1) and (max-height:560px){.firstlove-lights{font-size:11px}.firstlove-final-art{width:22px}}
+
+/* 타이틀의 불러오기(저장 슬롯) */
+.firstlove-slots .firstlove-slot-list{display:flex;flex-direction:column;gap:10px;margin:6px 0 4px}
+.firstlove-slots .firstlove-slot-list .firstlove-button{justify-content:space-between;min-height:52px;font-size:17px}
+.firstlove-slots .firstlove-slot-list .firstlove-button:disabled .firstlove-save-date{color:#98a7b1}
+/* 게임 안 메뉴(설정·저장)가 열린 동안 대사 도구와 원화 버튼을 숨긴다 */
+#stage.vn-menu-open .vn-quick,#stage.vn-menu-open .vn-cg-reopen{visibility:hidden}
+
+/* 선택지가 많을 때(5개 이상): 세로는 촘촘하게, 가로는 두 줄. 질문 상자는 줄어들지 않게. */
+#layer_ui .choices .choice-hint{flex:none}
+#layer_ui .choices.many{gap:12px}
+#layer_ui .choices.many .choice{padding-top:12px;padding-bottom:12px}
+#layer_ui .choices.many .choice-hint{height:150px!important}
+#stage.landscape #layer_ui>.choices.many{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;column-gap:14px;row-gap:12px;bottom:150px}
+#stage.landscape #layer_ui>.choices.many .choice-hint{grid-column:1/-1;height:auto!important}
+#stage.landscape #layer_ui>.choices.many .choice{min-height:72px;padding:12px 56px;font-size:26px}

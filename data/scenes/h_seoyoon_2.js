@@ -111,7 +111,7 @@ registerScenes({
       {choice:[
         {text:"눈 치우는 거 도와줄까?", aff:{seoyoon:3}, goto:"help"},
         {text:"쉬는 것도 훈련이래.", aff:{seoyoon:2}, goto:"rest"},
-        {text:"(호감 50 이상) 창에 같이 이마를 댄다.", cond:"aff.seoyoon>=50", aff:{seoyoon:4}, goto:"forehead"}
+        {text:"창에 같이 이마를 댄다.", cond:"aff.seoyoon>=50", aff:{seoyoon:4}, goto:"forehead"}
       ]},
       {label:"help"},
       {say:"seoyoon", text:"400미터를? 삽을 바통 삼아 계주라도 하게?", emote:"laugh", comic:{who:"seoyoon", type:"sweat", text:"띠용!", caption:"운동장이 너무 넓다"}},

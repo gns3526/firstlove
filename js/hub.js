@@ -98,6 +98,10 @@
   hub.title = function () {
     // A screenshot helper or a second caller may request the same title while boot waits.
     if (activeTitle) return activeTitle.promise;
+    // 게임 안의 메뉴에서 슬롯을 불러오면, 새로 고친 뒤 타이틀을 거치지 않고 바로 이어 간다.
+    var resumeNow = false;
+    try { resumeNow = sessionStorage.getItem("firstlove_resume") === "1"; sessionStorage.removeItem("firstlove_resume"); } catch (e) {}
+    if (resumeNow && G.load()) return Promise.resolve("load");
     if (G.music) G.music.screen("title");
     G.ui.topbar(false); vn.reset(); hub.close();
     // 타이틀로 오면 넘기기를 끄고, 지난 판의 대사 기록을 비운다.
@@ -135,7 +139,9 @@
       var b = G.ui.el("button", "firstlove-button" + (cls ? " " + cls : ""), "", menu);
       b.type = "button"; b.textContent = text; return b;
     }
-    var start = button("새로 시작", "firstlove-primary"), resume = button("이어하기"), album = button("앨범 / 기록"), stories = button("함께한 날들");
+    var start = button("새로 시작", "firstlove-primary"), resume = button("이어하기"), slots = button("불러오기"), album = button("앨범 / 기록"), stories = button("함께한 날들");
+    slots.dataset.action = "slots";
+    slots.disabled = ![1, 2, 3].some(function (n) { return G.saveInfo("s" + n); });
     start.dataset.action = "new"; resume.dataset.action = "continue"; album.dataset.action = "album";
     stories.dataset.action = "stories";
     // 문양의 빛(진짜 결말 하나에 하나). 여섯이 모이면 숨은 결말 「눈 녹은 문양」이 열린다 — 클라나드의 빛의 구슬처럼.
@@ -215,6 +221,27 @@
       }
       start.onclick = function () { if (albumOpen) return; G.sfx("tap"); if (G.hasSave()) confirmNew(finish); else finish("new"); };
       if (finalButton) finalButton.onclick = function () { if (albumOpen) return; G.sfx("tap"); finish("final"); };
+      // 저장 슬롯 고르기: 일반 미연시의 '불러오기'.
+      slots.onclick = function () {
+        if (albumOpen || dialog) return; G.sfx("tap");
+        content.inert = true;
+        dialog = G.ui.el("div", "firstlove-confirm-backdrop", "", root);
+        var panel = G.ui.el("section", "firstlove-confirm firstlove-slots", "", dialog);
+        panel.setAttribute("role", "dialog"); panel.setAttribute("aria-modal", "true"); panel.setAttribute("aria-labelledby", "firstlove-slots-heading");
+        var h = G.ui.el("h2", "", "", panel); h.id = "firstlove-slots-heading"; h.textContent = "어디서부터 이어 갈까요?";
+        var list = G.ui.el("div", "firstlove-slot-list", "", panel), firstSlot = null;
+        [1, 2, 3].forEach(function (n) {
+          var info = G.saveInfo("s" + n), b = G.ui.el("button", "firstlove-button", "", list); b.type = "button";
+          b.textContent = "슬롯 " + n; if (!firstSlot && info) firstSlot = b;
+          var d = G.ui.el("span", "firstlove-save-date", "", b); d.textContent = info ? info.date : "비어 있음";
+          b.disabled = !info;
+          b.onclick = function () { G.sfx("tap"); if (G.load("s" + n)) { G.save(); finish("load"); } else feedback.textContent = "저장 기록을 읽지 못했습니다."; };
+        });
+        var row = G.ui.el("div", "firstlove-confirm-actions", "", panel);
+        var no = G.ui.el("button", "firstlove-button", "", row); no.type = "button"; no.textContent = "닫기";
+        no.onclick = function () { G.sfx("tap"); dialog.remove(); dialog = null; content.inert = false; slots.focus(); };
+        (firstSlot || no).focus();
+      };
       stories.onclick = function () { if (albumOpen) return; G.sfx("tap"); if (G.requested60) G.requested60.open(); };
       resume.onclick = function () {
         if (albumOpen) return; G.sfx("tap"); if (G.load()) finish("load");
@@ -646,8 +673,12 @@
   hub.album = function (fromTitle) {
     var s = screen(); s.classList.add("wide-album"); G.ui.el("div", "", "position:absolute;left:0;top:0;width:720px;height:1280px;background:url('" + G.assets.img("gui/paper_bg") + "') center/cover", s);
     var hd = G.ui.el("div", "hdr", "border-radius:0", s); hd.textContent = "앨범 (" + G.state.photos.length + "장)"; var x = G.ui.imgEl("gui/txt_x", "", hd); x.className = "x";
-    var fc = G.ui.el("div", "", "position:absolute;left:20px;top:26px;display:flex;align-items:center;gap:4px;font-size:22px;line-height:44px", hd); G.ui.imgEl("icon/film_icon", "width:40px;height:40px", fc); var fn1 = G.ui.el("span", "", "", fc); fn1.textContent = G.state.film; G.ui.imgEl("gui/film_num_img", "width:14px;height:30px", fc); var fn2 = G.ui.el("span", "", "opacity:.8", fc); fn2.textContent = "5";
-    var plus = G.ui.imgBtn("guiv/sub_btn03_n", "gui/sub_btn03_p", "position:absolute;right:80px;top:8px;width:80px;height:80px", hd, function () { G.ui.toast("필름은 밤에 편의점에서 살 수 있어요 (5개 100포링)"); });
+    // 일반 미연시 진행에서는 필름·편의점이 없다 — 필름 수와 구입 단추를 두지 않는다.
+    var novelMode = !!(G.novel && G.novel());
+    if (!novelMode) {
+      var fc = G.ui.el("div", "", "position:absolute;left:20px;top:26px;display:flex;align-items:center;gap:4px;font-size:22px;line-height:44px", hd); G.ui.imgEl("icon/film_icon", "width:40px;height:40px", fc); var fn1 = G.ui.el("span", "", "", fc); fn1.textContent = G.state.film; G.ui.imgEl("gui/film_num_img", "width:14px;height:30px", fc); var fn2 = G.ui.el("span", "", "opacity:.8", fc); fn2.textContent = "5";
+      G.ui.imgBtn("guiv/sub_btn03_n", "gui/sub_btn03_p", "position:absolute;right:80px;top:8px;width:80px;height:80px", hd, function () { G.ui.toast("필름은 밤에 편의점에서 살 수 있어요 (5개 100포링)"); });
+    }
     // 헤더 배너: 사진이 있으면 최근 사진, 없으면 안내 문구
     var last = G.state.photos.length ? G.state.photos[G.state.photos.length - 1] : null;
     if (last) {
@@ -658,7 +689,7 @@
     } else {
       var eb = G.ui.el("div", "alb-empty", "", s);
       var eb1 = G.ui.el("b", "", "", eb); eb1.textContent = "아직 사진이 없어요";
-      var eb2 = G.ui.el("div", "", "", eb); eb2.textContent = "데이트에서 사진 젬을 모으거나, 잠금화면의 사진 버튼으로 찍어 보세요.";
+      var eb2 = G.ui.el("div", "", "", eb); eb2.textContent = novelMode ? "이야기 속에서 함께 찍은 사진이 이곳에 남아요." : "데이트에서 사진 젬을 모으거나, 잠금화면의 사진 버튼으로 찍어 보세요.";
     }
     G.ui.imgEl("gui/tape_icon_" + (G.state.photos.length % 2), "position:absolute;left:44px;top:96px;width:168px;height:68px;transform:rotate(-8deg);pointer-events:none", s);
     G.ui.imgEl("gui/tape_icon_" + ((G.state.photos.length + 1) % 2), "position:absolute;left:508px;top:96px;width:168px;height:68px;transform:rotate(6deg);pointer-events:none", s);
@@ -827,8 +858,10 @@
       row(null, "효과음 음량", effectsBox);
     }
     // 문자·메시지 — 안내 칩 + 아래 설명 한 줄
-    var chip = G.ui.el("div", "set-chip", ""); chip.textContent = "밤 · 폰 → 메시지";
-    row("gui/option_icon_04", "문자·메시지", chip, "받은 문자와 앱 메시지는 밤 시간대의 폰에서 다시 볼 수 있습니다.");
+    if (!(G.novel && G.novel())) {
+      var chip = G.ui.el("div", "set-chip", ""); chip.textContent = "밤 · 폰 → 메시지";
+      row("gui/option_icon_04", "문자·메시지", chip, "받은 문자와 앱 메시지는 밤 시간대의 폰에서 다시 볼 수 있습니다.");
+    }
     // 저장/불러오기 — 라벨을 덮지 않도록 슬롯 버튼은 다음 줄에
     var sv = G.ui.el("div", "", "display:flex;gap:12px;width:100%");
     [1, 2, 3].forEach(function (n) {
@@ -844,14 +877,14 @@
           } else if (i === 1) {
             if (!G.saveInfo("s" + n)) { G.ui.toast("아직 저장된 기록이 없습니다."); return; }
             if (G.load("s" + n)) {
-              if (G.save()) location.reload();
+              if (G.save()) { try { sessionStorage.setItem("firstlove_resume", "1"); } catch (e) {} location.reload(); }
               else G.ui.toast("이어하기 기록을 저장하지 못했습니다. 저장 공간을 확인해 주세요.");
             } else G.ui.toast("저장 기록을 읽지 못했습니다.");
           }
         });
       };
     });
-    row("gui/option_icon_05", "저장/불러오기", sv, "시간대가 바뀔 때 자동 저장됩니다. 슬롯에 직접 저장할 수도 있습니다.", true);
+    row("gui/option_icon_05", "저장/불러오기", sv, "아침·점심·방과 후·밤이 시작될 때마다 자동 저장됩니다. 슬롯에 저장하면 그 부분의 처음부터 이어집니다.", true);
     var back = G.ui.el("div", "btn gray set-back", "", body); back.textContent = "타이틀로 돌아가기";
     back.onclick = function () { G.ui.modal("타이틀로 돌아갈까요?\n(최근 자동 저장 지점부터 이어할 수 있습니다)", ["돌아가기", "취소"]).then(function (i) { if (i === 0) location.reload(); }); };
     return new Promise(function (res) { x.onclick = function () { hub.close(); res(); }; });

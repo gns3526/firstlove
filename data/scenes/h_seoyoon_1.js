@@ -14,7 +14,7 @@ registerScenes({
       {choice:[
         {text:"뛴다.", aff:{seoyoon:3}, stat:{fitness:2}, goto:"run"},
         {text:"걷자. 넌 뛰어도 되고.", aff:{seoyoon:1}, goto:"walk"},
-        {text:"(감자칩 있음) 이거 먹고 뛰어.", cond:"has.snack_chips", aff:{seoyoon:4}, item:{snack_chips:-1}, goto:"chips"}
+        {text:"감자칩 있는데, 이거 먹고 뛰어.", cond:"has.snack_chips", aff:{seoyoon:4}, item:{snack_chips:-1}, goto:"chips"}
       ]},
       {label:"run"},
       {fx:"shake"},
@@ -431,7 +431,7 @@ registerScenes({
       {choice:[
         {text:"서윤 속도에 맞춘다.", aff:{seoyoon:3}, stat:{fitness:2}, goto:"fast"},
         {text:"내 속도로 간다.", aff:{seoyoon:1}, goto:"slow"},
-        {text:"(체력 30 이상) 서윤보다 빠르게 달린다.", cond:"stat.fitness>=30", aff:{seoyoon:4}, goto:"faster"}
+        {text:"서윤보다 빠르게 달린다.", cond:"stat.fitness>=30", aff:{seoyoon:4}, goto:"faster"}
       ]},
       {label:"fast"},
       {fx:"shake"},

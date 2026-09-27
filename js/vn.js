@@ -311,7 +311,9 @@
   // Ctrl 을 누르고 있는 동안도 같은 규칙으로 넘긴다.
   var skipOn = false, ctrlSkip = false, skipEpoch = 0, waiter = null, pendingLine = null, quick = null;
   function skipping() { return skipOn || ctrlSkip; }
-  function overlayOpen() { return !!(G.records && G.records.backlogOpen()); }
+  var menuOpen = false;
+  function novel() { return !!(G.novel && G.novel()); }
+  function overlayOpen() { return menuOpen || !!(G.records && G.records.backlogOpen()); }
   function blocked() { return !!(G.sceneArt && G.sceneArt.active) || overlayOpen(); }
   // 장면 문장은 장면 id + 대본 원문으로 기억한다(이름을 바꿔도, 다른 저장 파일에서도 같은 문장).
   function lineKey(id, s) { try { return id + "\u0001" + (typeof s === "string" ? s : JSON.stringify(s)); } catch (e) { return null; } }
@@ -331,10 +333,19 @@
   };
   vn.setAuto = function (on) { G.state.settings.auto = !!on; syncQuick(); pokeWaiter(); };
   vn.openBacklog = function () { return G.records ? G.records.openBacklog() : Promise.resolve(); };
+  vn.openMenu = function () {
+    if (menuOpen || !(G.hub && G.hub.settings) || !G.state) return Promise.resolve();
+    menuOpen = true; vn.setSkip(false);
+    // 대사 도구 막대는 무대 위층이라 메뉴 화면 위로 비친다 — 메뉴가 열린 동안 숨긴다.
+    var stage = document.getElementById("stage"); stage.classList.add("vn-menu-open");
+    function closed() { menuOpen = false; stage.classList.remove("vn-menu-open"); }
+    return Promise.resolve().then(function () { return G.hub.settings(); }).then(closed, closed);
+  };
   var QUICK_ICONS = {
     log: '<path d="M5 6h14M5 12h14M5 18h9"/>',
     auto: '<path d="M8 5.5v13l10-6.5Z"/>',
-    skip: '<path d="M3.5 6v12l8-6ZM12.5 6v12l8-6Z"/>'
+    skip: '<path d="M3.5 6v12l8-6ZM12.5 6v12l8-6Z"/>',
+    menu: '<circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M4.2 7.5l2 1.2M17.8 15.3l2 1.2M4.2 16.5l2-1.2M17.8 8.7l2-1.2"/>'
   };
   function syncQuick() {
     if (!quick || !quick.isConnected) return;
@@ -356,6 +367,8 @@
       button("log", "기록", vn.openBacklog);
       quick.autoBtn = button("auto", "자동", function () { vn.setAuto(!G.state.settings.auto); });
       quick.skipBtn = button("skip", "넘기기", function () { vn.setSkip(!skipOn); });
+      // 저장·불러오기·설정·타이틀 — 일반 미연시의 시스템 메뉴.
+      button("menu", "메뉴", vn.openMenu);
     }
     quick.classList.toggle("in-call", !!callMode);
     syncQuick();
@@ -478,6 +491,8 @@
       // 힌트 박스: select_bg 원본 670×243 비율(600×218) 유지 — 스프링 링 폭(약 11%)만큼 좌측 패딩을 줘 글자를 종이 영역 중앙에 둔다
       if (hint) { var h = G.ui.el("div", "choice-hint", "position:relative;width:600px;height:218px;padding:0 20px 0 66px;background:url('" + G.assets.img("gui/select_bg") + "') center/100% 100% no-repeat;color:#333;text-shadow:none;font-weight:700;font-size:var(--t-lg);line-height:1.35;word-break:keep-all;margin-bottom:8px", box); h.textContent = G.text(hint, ctx); }
       var avail = list.filter(function (c) { return !c.cond || vn.evalExpr(c.cond, ctx); });
+      // 고를 것이 많으면(방과 후에 찾아갈 사람 등) 촘촘하게, 가로 화면에선 두 줄로 놓는다.
+      if (avail.length >= 5) box.classList.add("many");
       var settled = false;
       avail.forEach(function (c) {
         var e = G.ui.el("button", "choice", "", box); e.type = "button"; e.textContent = G.text(c.text, ctx);
@@ -748,11 +763,12 @@
         if ("stat" in s) applyDelta(s.stat, "stat");
         if ("flag" in s) applyDelta(s.flag, "flag");
         if ("item" in s) applyDelta(s.item, "item");
-        if ("money" in s) { G.addMoney(s.money); G.ui.toast((s.money > 0 ? "+" : "") + s.money + " 포링"); }
+        // 일반 미연시 진행에서는 돈·해금·루트 같은 게임 알림을 띄우지 않는다(안에서만 기록).
+        if ("money" in s) { G.addMoney(s.money); if (!novel()) G.ui.toast((s.money > 0 ? "+" : "") + s.money + " 포링"); }
         if ("cond" in s) G.addCond(s.cond);
         if ("film" in s) { G.state.film = Math.max(0, G.state.film + s.film); }
-        if ("unlock" in s) { if (s.unlock.spot) G.state.unlocks.spots[s.unlock.spot] = true; if (s.unlock.outfit) G.state.unlocks.outfits[s.unlock.outfit] = true; G.ui.toast("해금: " + (s.unlock.spot ? (cfg.dateSpots.filter(function (d) { return d.id === s.unlock.spot; })[0] || {}).name || s.unlock.spot : s.unlock.outfit)); }
-        if ("route" in s) { G.state.route = s.route; G.ui.toast(G.charName(s.route) + " 루트 확정"); }
+        if ("unlock" in s) { if (s.unlock.spot) G.state.unlocks.spots[s.unlock.spot] = true; if (s.unlock.outfit) G.state.unlocks.outfits[s.unlock.outfit] = true; if (!novel()) G.ui.toast("해금: " + (s.unlock.spot ? (cfg.dateSpots.filter(function (d) { return d.id === s.unlock.spot; })[0] || {}).name || s.unlock.spot : s.unlock.outfit)); }
+        if ("route" in s) { G.state.route = s.route; if (!novel()) G.ui.toast(G.charName(s.route) + " 루트 확정"); }
         // 앱 연출·이름 입력·미니게임·사진은 직접 보고 누르는 순간이라 넘기기를 멈춘다.
         if ("app" in s) { vn.setSkip(false); if (G.hub && G.hub.appFx) await G.hub.appFx(s.app); }
         if ("name" in s) { vn.setSkip(false); await vn.namePrompt(); }
