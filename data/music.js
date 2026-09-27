@@ -33,6 +33,8 @@
     day11_night: "night_school", day17_night: "night_school", day18_night: "night_school",
     day16_noon: "sad", day17_after: "intimate", day18_after: "intimate",
     festival: "festival", festival_normal: "sad", sports_day: "seoyoon",
-    confession_normal: "sad", xmas_eve_normal: "sad", ending_normal: "normal_ending"
+    confession_normal: "sad", xmas_eve_normal: "sad", ending_normal: "normal_ending",
+    // 숨은 결말 「눈 녹은 문양」
+    final_prologue: "prediction", final_december: "winter", final_eve: "reveal", final_light: "confession"
   };
 })();

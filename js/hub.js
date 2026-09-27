@@ -100,6 +100,9 @@
     if (activeTitle) return activeTitle.promise;
     if (G.music) G.music.screen("title");
     G.ui.topbar(false); vn.reset(); hub.close();
+    // 타이틀로 오면 넘기기를 끄고, 지난 판의 대사 기록을 비운다.
+    if (vn.setSkip) vn.setSkip(false);
+    if (G.records) G.records.clearLog();
     var session = {}; activeTitle = session;
     var stage = document.getElementById("stage"), previousInert = stage.inert;
     var previousAria = stage.getAttribute("aria-hidden");
@@ -135,6 +138,18 @@
     var start = button("새로 시작", "firstlove-primary"), resume = button("이어하기"), album = button("앨범 / 기록"), stories = button("함께한 날들");
     start.dataset.action = "new"; resume.dataset.action = "continue"; album.dataset.action = "album";
     stories.dataset.action = "stories";
+    // 문양의 빛(진짜 결말 하나에 하나). 여섯이 모이면 숨은 결말 「눈 녹은 문양」이 열린다 — 클라나드의 빛의 구슬처럼.
+    var lights = G.records ? G.records.lights() : 0, finalButton = null;
+    if (G.records && G.records.finalOpen()) {
+      finalButton = button("", "firstlove-final"); finalButton.dataset.action = "final";
+      var fArt = G.ui.el("span", "firstlove-final-art", "", finalButton); fArt.innerHTML = G.records.patternSVG(G.records.lit(), G.records.seenEnding("final"));
+      var fText = G.ui.el("span", "firstlove-final-text", "", finalButton); fText.textContent = "눈 녹은 문양";
+      finalButton.setAttribute("aria-label", "숨은 결말 눈 녹은 문양");
+    } else if (lights > 0) {
+      var lightRow = G.ui.el("p", "firstlove-lights", "", menu); lightRow.setAttribute("aria-label", "문양의 빛 " + lights + " / 6");
+      var lArt = G.ui.el("span", "firstlove-lights-art", "", lightRow); lArt.innerHTML = G.records.patternSVG(G.records.lit(), false);
+      G.ui.el("span", "", "", lightRow).textContent = "문양의 빛 " + lights + " / 6";
+    }
     var feedback = G.ui.el("p", "firstlove-feedback", "", menu); feedback.setAttribute("role", "status");
     function refreshSave() {
       resume.disabled = !G.hasSave(); var info = G.saveInfo(); resume.textContent = "이어하기";
@@ -199,6 +214,7 @@
         restoreStage(); hub.close(); if (activeTitle === session) activeTitle = null; resolve(mode);
       }
       start.onclick = function () { if (albumOpen) return; G.sfx("tap"); if (G.hasSave()) confirmNew(finish); else finish("new"); };
+      if (finalButton) finalButton.onclick = function () { if (albumOpen) return; G.sfx("tap"); finish("final"); };
       stories.onclick = function () { if (albumOpen) return; G.sfx("tap"); if (G.requested60) G.requested60.open(); };
       resume.onclick = function () {
         if (albumOpen) return; G.sfx("tap"); if (G.load()) finish("load");
@@ -224,7 +240,9 @@
 
   // ---------- lock screen (the app) ----------
   hub.silhouetteFilter = function (h) {
-    var a = G.state.aff[h]; if (G.state.appRevealed && h === G.state.route) return "none";
+    var a = G.state.aff[h] || 0; if (G.state.appRevealed && h === G.state.route) return "none";
+    // 12월 24일에 정체가 밝혀지기 전에는 절반 넘게 선명해지지 않는다. 실루엣만 보고 누구인지 알 수 없게.
+    a = Math.min(a, 50);
     var blur = Math.round(26 * (1 - a / 100)), bright = 0.05 + 0.95 * Math.pow(a / 100, 1.3), sat = 0.2 + 0.8 * a / 100;
     return "blur(" + blur + "px) brightness(" + bright.toFixed(2) + ") saturate(" + sat.toFixed(2) + ")";
   };
@@ -247,7 +265,8 @@
       settings:'<path d="m9 3-1 3-3 1-2 4 2 2v3l4 3 3-1 3 1 4-3v-3l2-2-2-4-3-1-1-3Z"/><circle cx="12" cy="11" r="3"/>',
       mail:'<rect x="2" y="5" width="20" height="15" rx="2"/><path d="m3 6 9 7 9-7"/>',
       arrow:'<path d="M4 12h16m-6-6 6 6-6 6"/>',
-      sparkle:'<path d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5Z"/>'
+      sparkle:'<path d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5Z"/>',
+      silhouette:'<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-3.8 4.1-6 7.5-6s6.3 2.2 7.5 6"/>'
     };
     function icon(parent, name) {
       var el = G.ui.el("span", "home-icon", "", parent);
@@ -274,7 +293,8 @@
       text(s,"div","home-companion",G.withJosa(G.hero(h).name,"와과")+" 함께하는 오늘");
     } else {
       var invitation=G.ui.el("section","home-invitation","",s);
-      icon(invitation,installed?"mail":"sparkle");
+      // 정체가 밝혀지기 전의 앱: 이름도 얼굴도 없이, 누군가의 윤곽만.
+      icon(invitation,installed?"silhouette":"sparkle");
       text(invitation,"div","home-invitation-overline",installed?"아직 이름 모를 마음":"새로운 하루의 시작");
       text(invitation,"h1","home-invitation-title",installed?"누군가의 마음이\n당신에게 도착했어요.":"오늘은 어떤 순간을\n만나게 될까요?");
       text(invitation,"p","home-invitation-copy",installed?"조금씩 가까워질, 우리들의 이야기.":"평범한 하루에 찾아올 작은 설렘.");
@@ -642,12 +662,17 @@
     }
     G.ui.imgEl("gui/tape_icon_" + (G.state.photos.length % 2), "position:absolute;left:44px;top:96px;width:168px;height:68px;transform:rotate(-8deg);pointer-events:none", s);
     G.ui.imgEl("gui/tape_icon_" + ((G.state.photos.length + 1) % 2), "position:absolute;left:508px;top:96px;width:168px;height:68px;transform:rotate(6deg);pointer-events:none", s);
-    var collection = G.ui.el("button", "btn", "position:absolute;left:60px;top:326px;width:290px;height:62px;padding:10px;font-size:var(--t-md)", s);
+    var collection = G.ui.el("button", "btn", "position:absolute;left:40px;top:326px;width:200px;height:62px;padding:10px 6px;font-size:var(--t-sm)", s);
     collection.type = "button"; collection.textContent = "컷씬 수집 앨범";
     collection.onclick = function () { G.sfx("tap"); if (G.gallery) G.gallery.open(); };
-    var stories = G.ui.el("button", "btn", "position:absolute;left:370px;top:326px;width:290px;height:62px;padding:10px;font-size:var(--t-md)", s);
+    var stories = G.ui.el("button", "btn", "position:absolute;left:260px;top:326px;width:200px;height:62px;padding:10px 6px;font-size:var(--t-sm)", s);
     stories.type = "button"; stories.textContent = "함께한 날들";
     stories.onclick = function () { G.sfx("tap"); if (G.requested60) G.requested60.open(); };
+    // 본 결말을 모아 두는 엔딩 목록(유명 미연시의 엔딩 리스트). 못 본 결말은 ??? 와 힌트로 보인다.
+    var endings = G.ui.el("button", "btn", "position:absolute;left:480px;top:326px;width:200px;height:62px;padding:10px 6px;font-size:var(--t-sm)", s);
+    endings.type = "button"; endings.dataset.albumEndings = "true";
+    endings.textContent = "엔딩 목록" + (G.records ? " (" + G.records.seenCount() + "/" + G.records.ENDINGS.length + ")" : "");
+    endings.onclick = function () { G.sfx("tap"); if (G.records) G.records.openEndings(); };
     var list = G.ui.el("div", "list", "left:0;top:404px;width:720px;height:876px", s);
     var grid = G.ui.el("div", "photogrid" + (G.state.photos.length === 1 ? " one" : ""), "", list);
     G.state.photos.slice().reverse().forEach(function (ph) {
@@ -688,8 +713,13 @@
   };
 
   // ---------- outfit ----------
-  hub.outfit = function () {
-    var h = G.appVoice(), adult = G.isAdult(h), c = window.ASSETS.chars[h];
+  // 옷장은 사람을 먼저 고른 뒤 연다. 예전에는 앱의 목소리(가장 가까운 사람)의 옷장이 바로 열려,
+  // 12월 24일 전에 앱 속 '그 애'가 누구인지 이름과 얼굴로 드러났다.
+  hub.outfit = function (who) {
+    if (!who) return hub.heroineSelect("누구의 옷장을 열어 볼까?").then(function (picked) {
+      return picked ? hub.outfit(picked).then(function () { return hub.outfit(); }) : null;
+    });
+    var h = who, adult = G.isAdult(h), c = window.ASSETS.chars[h];
     // 성인은 근무복·데이트·집·운동복 원화를 미리보기로만 넘겨 본다(본편 의상은 장면이 정한다).
     if (adult) { c = {}; var adultArt = (window.ASSETS.characterArt || {})[h] || {}; ["default", "date_casual", "home", "track"].forEach(function (k) { if (k === "default" || adultArt[k]) c[k] = true; }); }
     var s = screen(G.assets.bg(adult ? (G.hero(h).home || "town_entrance") : "house_" + { seoyoon: "A", daeun: "B", haneul: "C", yuri: "D" }[h], { time: "afternoon" })); s.classList.add("wide-outfit");
@@ -836,7 +866,7 @@
     var tabs = G.ui.el("div", "hub-tabs", "top:92px", p);
     var list = G.ui.el("div", "list", "left:0;top:150px;width:660px;height:906px", p);
     G.ui.el("div", "loc-fade", "", p);
-    var TIPS = [["게임 방법", "하루는 아침·정오·오후·밤. 오후에 활동으로 능력치를 올리고, 주말엔 지도에서 데이트 장소를 고르세요."], ["앱 「내 손안의 여자친구」", "자정마다 도착하는 밤의 메시지는 내일을 알고 있습니다. 잠금화면의 실루엣은 조금씩 선명해집니다."], ["액션토크", "TALK 버튼을 길게 눌러 파워를 모으고, 놓아서 화살을 쏘세요. 상대가 좋아하는 젬 3종을 많이 깨면 GREAT."], ["밤의 학교", "1~5 중 숫자를 고르고 주사위 2개를 굴립니다. 하나라도 맞으면 적중. 행운 부적이 있으면 주사위가 하나 늘어납니다."], ["알바", "카페·버거집·편의점. 파워 게이지의 바늘을 초록 구간에서 멈추세요. 3번 중 2번 성공하면 보수 UP."], ["선물", "편의점에서 산 간식을 밤에 통화하며 준비해 두면, 다음에 만날 때 건넬 수 있습니다. 취향에 맞으면 호감도가 크게 오릅니다."], ["루트 확정", "가을 축제까지 호감도 50 이상인 사람이 생기면 그 사람의 이야기가 시작됩니다. 고백은 호감도 70 이상."], ["서하와 이나", "교장실 비서 서하, 윗집 승무원 이나. 저녁이면 두 사람의 이야기가 열리거나 연락이 옵니다. 아침·점심에 마주치고, 호감도 30부터 주말 데이트를 할 수 있습니다."]];
+    var TIPS = [["게임 방법", "하루는 아침·정오·오후·밤. 오후에 활동으로 능력치를 올리고, 주말엔 지도에서 데이트 장소를 고르세요."], ["앱 「내 손안의 여자친구」", "자정마다 도착하는 밤의 메시지는 내일을 알고 있습니다. 잠금화면의 실루엣은 조금씩 선명해집니다."], ["액션토크", "TALK 버튼을 길게 눌러 파워를 모으고, 놓아서 화살을 쏘세요. 상대가 좋아하는 젬 3종을 많이 깨면 GREAT."], ["밤의 학교", "1~5 중 숫자를 고르고 주사위 2개를 굴립니다. 하나라도 맞으면 적중. 행운 부적이 있으면 주사위가 하나 늘어납니다."], ["알바", "카페·버거집·편의점. 파워 게이지의 바늘을 초록 구간에서 멈추세요. 3번 중 2번 성공하면 보수 UP."], ["선물", "편의점에서 산 간식을 밤에 통화하며 준비해 두면, 다음에 만날 때 건넬 수 있습니다. 취향에 맞으면 호감도가 크게 오릅니다."], ["루트 확정", "가을 축제까지 호감도 50 이상인 사람이 생기면 그 사람의 이야기가 시작됩니다. 고백은 호감도 70 이상."], ["결말", "종업 전날 마음이 닿으면 진짜 결말, 한 걸음 모자라면 보류 결말, 누구의 이야기도 시작되지 않으면 노멀 엔딩. 본 결말은 앨범의 「엔딩 목록」에 남습니다. 진짜 결말을 볼 때마다 문양에 빛이 하나씩 켜지고, 여섯이 모이면 타이틀에 숨은 결말이 열립니다."], ["대사 도구", "대화창 아래 「기록」은 지난 대사, 「자동」은 자동 진행, 「넘기기」는 한 번 읽은 문장만 빠르게 넘깁니다. 처음 보는 문장과 선택지에서는 멈춥니다. PC에서는 휠을 위로 굴려 기록을 열고, Ctrl을 누르고 있으면 넘깁니다."], ["서하와 이나", "교장실 비서 서하, 윗집 승무원 이나. 저녁이면 두 사람의 이야기가 열리거나 연락이 옵니다. 아침·점심에 마주치고, 호감도 30부터 주말 데이트를 할 수 있습니다."]];
     var unread = G.state.inbox.filter(function (m) { return !m.read; }).length;
     function render(which) {
       list.innerHTML = "";
@@ -860,7 +890,10 @@
   hub.credits = function (endingId) {
     if (G.music) G.music.screen("credits", { endingId: endingId });
     var l = G.ui.layer("popup"); var c = G.ui.el("div", "credits", "", l);
-    var h = G.state.route; var lines = ["첫사랑", "", endingId === "ending_normal" ? "— 다시, 봄 —" : "— " + G.charName(h) + " TRUE END —", "", "", "출연", "한서윤 · 정다은 · 윤하늘 · 차유리", "서하 · 이나", "강민재 · 오석환 · 송지호 · 백태오", "문정희 · 박세훈 · 강철", "최도윤 · 홍미나 · 김소라 · 오은정 · 이나래", "아빠 · 엄마 · 이나 어머니 · 마강수", "한서준 · 정다훈 · 차아리 · 경호원", "", "그리고 " + G.state.name, "", "", "잠금화면의 실루엣이 선명해질 때,", G.isAdult(h) ? "그 사람은 이미 거기에 있었다." : "그 애는 이미 거기에 있었다.", "", "", "Thank you for playing"];
+    var h = G.state.route, final = endingId === "ending_final";
+    var lines = ["첫사랑", "", endingId === "ending_normal" ? "— 다시, 봄 —" : final ? "— 숨은 결말 · 눈 녹은 문양 —" : "— " + G.charName(h) + " TRUE END —", "", "", "출연", "한서윤 · 정다은 · 윤하늘 · 차유리", "서하 · 이나", "강민재 · 오석환 · 송지호 · 백태오", "문정희 · 박세훈 · 강철", "최도윤 · 홍미나 · 김소라 · 오은정 · 이나래", "아빠 · 엄마 · 이나 어머니 · 마강수", "한서준 · 정다훈 · 차아리 · 경호원", "", "그리고 " + G.state.name, "", ""].concat(final
+      ? ["여섯 번의 봄을 지나", "문양 한가운데에 불이 켜질 때,", "우리는 아무도 늦지 않았다."]
+      : ["잠금화면의 실루엣이 선명해질 때,", G.isAdult(h) ? "그 사람은 이미 거기에 있었다." : "그 애는 이미 거기에 있었다."]).concat(["", "", "Thank you for playing"]);
     var r = G.ui.el("div", "roll", "", c); r.innerHTML = lines.map(function (x) { return x || "&nbsp;"; }).join("<br>");
     if (window.__SHOT) { r.style.animation = "none"; r.style.top = "120px"; }   // 스크린샷용: 롤을 멈춰 세운다
     return new Promise(function (res) { var done = false; function fin() { if (done) return; done = true; c.remove(); res(); } c.onclick = fin; setTimeout(fin, 23000); });

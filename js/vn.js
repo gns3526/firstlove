@@ -103,6 +103,7 @@
     return true;
   };
   vn.bgUrl = function () { return G.currentBg ? G.currentBg.url : ""; };
+  function currentOrbs() { return persistentFx.filter(function (e) { return e.classList && e.classList.contains("fx-orbs"); })[0] || null; }
   vn.clearPersistentFx = function () { persistentFx.forEach(function (e) { e.style.opacity = 0; setTimeout(function () { e.remove(); }, 800); }); persistentFx = []; };
 
   // ---------- sprites ----------
@@ -304,6 +305,72 @@
     if (c && c.role === "adult") return "#cfe0ef";
     return "#e2e8f2";
   };
+  // ---------- 대사 도구: 기록 · 자동 · 넘기기 ----------
+  // 대부분의 미연시가 대화창 아래에 두는 세 가지(렌파이 기본 퀵 메뉴와 같은 자리). 대조는 docs/GENRE_COMPARISON.md.
+  // 넘기기는 한 번 읽은 문장만 빠르게 지나가고, 처음 보는 문장·선택지·앱 연출·미니게임에서 멈춘다.
+  // Ctrl 을 누르고 있는 동안도 같은 규칙으로 넘긴다.
+  var skipOn = false, ctrlSkip = false, skipEpoch = 0, waiter = null, pendingLine = null, quick = null;
+  function skipping() { return skipOn || ctrlSkip; }
+  function overlayOpen() { return !!(G.records && G.records.backlogOpen()); }
+  function blocked() { return !!(G.sceneArt && G.sceneArt.active) || overlayOpen(); }
+  // 장면 문장은 장면 id + 대본 원문으로 기억한다(이름을 바꿔도, 다른 저장 파일에서도 같은 문장).
+  function lineKey(id, s) { try { return id + "\u0001" + (typeof s === "string" ? s : JSON.stringify(s)); } catch (e) { return null; } }
+  // 인물별·조건별 갈래 문장은 갈래마다 따로 읽은 것으로 친다(다은 편에서 읽었다고 이나 편 문장이 넘어가지 않게).
+  function variantTag(t, ctx) {
+    if (!t || typeof t !== "object") return "";
+    if (typeof t.when === "string") { var ok = vn.evalExpr(t.when, ctx); return (ok ? "T" : "F") + variantTag(ok ? t.then : t.else, ctx); }
+    return "@" + ((ctx && ctx.h) || "");
+  }
+  function pokeWaiter() { if (waiter) waiter.poke(); }
+  vn.skipping = skipping;
+  vn.setSkip = function (on) {
+    on = !!on;
+    if (on) { skipTyping = true; skipEpoch++; }
+    if (skipOn !== on) { skipOn = on; syncQuick(); }
+    pokeWaiter();
+  };
+  vn.setAuto = function (on) { G.state.settings.auto = !!on; syncQuick(); pokeWaiter(); };
+  vn.openBacklog = function () { return G.records ? G.records.openBacklog() : Promise.resolve(); };
+  var QUICK_ICONS = {
+    log: '<path d="M5 6h14M5 12h14M5 18h9"/>',
+    auto: '<path d="M8 5.5v13l10-6.5Z"/>',
+    skip: '<path d="M3.5 6v12l8-6ZM12.5 6v12l8-6Z"/>'
+  };
+  function syncQuick() {
+    if (!quick || !quick.isConnected) return;
+    quick.autoBtn.setAttribute("aria-pressed", String(!!(G.state && G.state.settings.auto)));
+    quick.skipBtn.setAttribute("aria-pressed", String(skipping()));
+  }
+  function ensureQuick() {
+    if (!(quick && quick.isConnected)) {
+      quick = G.ui.el("div", "vn-quick", "", G.ui.layer("ui"));
+      quick.setAttribute("role", "toolbar"); quick.setAttribute("aria-label", "대사 도구");
+      var button = function (key, label, run) {
+        var b = G.ui.el("button", "vn-quick-btn", "", quick); b.type = "button"; b.dataset.quick = key;
+        b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + QUICK_ICONS[key] + '</svg>';
+        G.ui.el("span", "", "", b).textContent = label;
+        // 눌러 쓴 뒤 초점을 놓아, 다음 스페이스·엔터가 버튼이 아니라 대사로 가게 한다.
+        b.onclick = function (e) { G.sfx("tap"); run(); if (e.detail) b.blur(); };
+        return b;
+      };
+      button("log", "기록", vn.openBacklog);
+      quick.autoBtn = button("auto", "자동", function () { vn.setAuto(!G.state.settings.auto); });
+      quick.skipBtn = button("skip", "넘기기", function () { vn.setSkip(!skipOn); });
+    }
+    quick.classList.toggle("in-call", !!callMode);
+    syncQuick();
+    return quick;
+  }
+  function removeQuick() { if (quick) quick.remove(); quick = null; }
+  addEventListener("keydown", function (e) {
+    if (e.key === "Control") { if (!ctrlSkip) { ctrlSkip = true; skipEpoch++; syncQuick(); pokeWaiter(); } }
+    else if (e.key === "PageUp" && waiter && waiter.alive() && !overlayOpen()) { e.preventDefault(); vn.openBacklog(); }
+  }, true);
+  addEventListener("keyup", function (e) { if (e.key === "Control" && ctrlSkip) { ctrlSkip = false; syncQuick(); pokeWaiter(); } }, true);
+  addEventListener("blur", function () { if (ctrlSkip) { ctrlSkip = false; syncQuick(); pokeWaiter(); } });
+  // 대사를 기다리는 동안 휠을 위로 굴리면 대사 기록이 열린다(Ctrl+휠 확대는 그대로 둔다).
+  addEventListener("wheel", function (e) { if (e.deltaY < 0 && !e.ctrlKey && waiter && waiter.alive() && !blocked()) vn.openBacklog(); }, { passive: true });
+
   // ---------- dialogue ----------
   var dlg = null;
   function ensureDlg() {
@@ -316,11 +383,18 @@
     dlg.next = G.ui.el("div", "dlg-next", "", dlg); dlg.next.textContent = "▼";
     return dlg;
   }
-  vn.hideDlg = function () { if (G.comic) G.comic.clear(); removeEventArtButton(); if (dlg) { dlg.remove(); dlg = null; } };
+  vn.hideDlg = function () { if (G.comic) G.comic.clear(); removeEventArtButton(); removeQuick(); if (dlg) { dlg.remove(); dlg = null; } };
   var skipTyping = false;
   vn.say = function (who, text, kind, cue) {
     if (G.sceneArt) G.sceneArt.beforeLine();
     cue = cue || {};
+    // 장면 밖에서 부르는 대사(전화·편의점 등)는 화면에 나온 문장 그대로 기억한다.
+    var key = pendingLine ? pendingLine + "\u0001" + (kind || "") : "\u0002" + (who || "") + "\u0001" + text;
+    pendingLine = null;
+    var seen = !!(G.records && G.records.isRead(key)), lineEpoch = skipEpoch;
+    // 넘기는 중에 처음 보는 문장을 만나면 멈춘다. 이 문장에서 다시 넘기기를 누르면 그때 넘어간다.
+    var held = skipping() && !seen;
+    if (held && skipOn) { skipOn = false; syncQuick(); }
     if (G.comic) { if (cue.comic) G.comic.show(cue.comic, who); else G.comic.clear(); }
     var rendered = Object.keys(chars);
     if (callMode && callMode.sprite && rendered.indexOf(callMode.who) < 0) rendered.push(callMode.who);
@@ -332,7 +406,7 @@
     if (who && cue.outfit !== undefined) vn.outfit(who, cue.outfit);
     if (who && cue.expression !== undefined) vn.expression(who, cue.expression, { pending: false, hold: !!cue.expressionHold });
     else if (who && cue.emote) vn.emote(who, cue.emote, { pending: false, hold: !!cue.expressionHold });
-    var d = ensureDlg(); syncEventArtButton(); d.next.style.display = "none";
+    var d = ensureDlg(); ensureQuick(); syncEventArtButton(); d.next.style.display = "none";
     if (who) {
       d.nameEl.style.display = ""; d.nameEl.textContent = G.charName(who) + (kind === "think" ? " (속마음)" : "");
       d.nameEl.style.color = vn.nameColor(who);
@@ -344,30 +418,58 @@
     d.classList.toggle("noname", !who);
     d.textEl.className = "dlg-text " + (kind === "think" ? "think" : who ? "" : "narr");
     d.textEl.textContent = "";
+    if (G.records) G.records.log({ kind: kind === "think" ? "think" : who ? "say" : "narr", name: who ? d.nameEl.textContent : "", color: who ? vn.nameColor(who) : "", text: text });
     var speed = [40, 26, 14, 0][G.state.settings.speed]; if (speed === undefined) speed = 14;
+    if (skipping() && seen) speed = 0;
     skipTyping = false;
     return new Promise(function (res) {
       var i = 0, timer;
-      function fin() { clearInterval(timer); d.textEl.textContent = text; d.next.style.display = ""; res(); }
+      function fin() { clearInterval(timer); d.textEl.textContent = text; d.next.style.display = ""; if (G.records) G.records.markRead(key); res(); }
       if (!speed) return fin();
       timer = setInterval(function () { if (skipTyping) return fin(); i++; d.textEl.textContent = text.slice(0, i); if (i >= text.length) fin(); }, speed);
     }).then(function () {
       return new Promise(function (res) {
         var l = G.ui.layer("ui");
         var c = G.ui.el("div", "tapcatch", "", l);
-        var autoT = G.state.settings.auto ? setTimeout(done, 900 + text.length * 45) : null;
-        function done(e) { if (G.sceneArt && G.sceneArt.active) { if (!e && autoT) autoT = setTimeout(done, 200); return; } if (e && e.preventDefault) e.preventDefault(); if (autoT) clearTimeout(autoT); c.remove(); removeEventListener("keydown", kd); res(); }
+        var timer = null, finished = false, me;
+        // 장면이 도중에 치워져 탭 자리가 사라졌으면(vn.reset 등) 이 대사는 버려진 것 — 다시 이어 붙이지 않는다.
+        function abandon() { finished = true; clearTimeout(timer); removeEventListener("keydown", kd); if (waiter === me) waiter = null; }
+        // 자동·넘기기 시간표. 버튼이나 Ctrl 로 방식이 바뀌면 다시 잡는다.
+        function plan() {
+          clearTimeout(timer); timer = null;
+          if (finished) return;
+          if (!c.isConnected) return abandon();
+          if (skipping() && !(held && lineEpoch === skipEpoch)) timer = setTimeout(function () { done(null, true); }, 70);
+          else if (G.state.settings.auto) timer = setTimeout(function () { done(null, true); }, 900 + text.length * 45);
+        }
+        function done(e, byTimer) {
+          if (finished) return;
+          if (!c.isConnected) return abandon();
+          // 원화 보기·대사 기록이 열려 있으면 기다렸다가 닫힌 뒤에 넘어간다.
+          if (blocked()) { if (byTimer) timer = setTimeout(function () { done(null, true); }, 250); return; }
+          if (e && e.preventDefault) e.preventDefault();
+          finished = true; clearTimeout(timer); c.remove(); removeEventListener("keydown", kd);
+          if (waiter === me) waiter = null;
+          res();
+        }
         c.addEventListener("pointerdown", function (e) { done(e); });
-        function kd(e) { if (!e.repeat && (e.key === " " || e.key === "Enter" || e.key === "ArrowRight")) done(); }
+        function kd(e) {
+          if (e.target && e.target.closest && e.target.closest(".vn-quick")) return;
+          if (!e.repeat && (e.key === " " || e.key === "Enter" || e.key === "ArrowRight")) done();
+        }
         addEventListener("keydown", kd);
+        me = waiter = { poke: plan, alive: function () { return !finished && c.isConnected; } };
+        plan();
       });
     }).then(function () { if (G.sceneArt) G.sceneArt.afterLine(); });
   };
   // during typing, a tap completes the text
-  document.addEventListener("pointerdown", function (e) { if (!(G.sceneArt && G.sceneArt.active) && !(e.target.closest && e.target.closest(".vn-cg-reopen"))) skipTyping = true; }, true);
-  document.addEventListener("keydown", function (e) { if (!(G.sceneArt && G.sceneArt.active) && !(e.target.closest && e.target.closest(".vn-cg-reopen")) && (e.key === " " || e.key === "Enter")) skipTyping = true; }, true);
+  function typingTarget(e) { return !(G.sceneArt && G.sceneArt.active) && !overlayOpen() && !(e.target.closest && e.target.closest(".vn-cg-reopen,.vn-quick,.backlog")); }
+  document.addEventListener("pointerdown", function (e) { if (typingTarget(e)) skipTyping = true; }, true);
+  document.addEventListener("keydown", function (e) { if (typingTarget(e) && (e.key === " " || e.key === "Enter")) skipTyping = true; }, true);
 
   vn.choice = function (list, hint, ctx) {
+    vn.setSkip(false);
     if (G.comic) G.comic.clear();
     if (G.sceneArt) G.sceneArt.clearPresentation();
     var l = G.ui.layer("ui");
@@ -409,7 +511,11 @@
           else if (ev.key === "End") target = buttons.length - 1;
           if (target !== undefined) { ev.preventDefault(); buttons[target].focus(); }
         };
-        e.onclick = function () { if (settled || !box.isConnected) return; settled = true; G.sfx("tap"); box.remove(); res(c); };
+        e.onclick = function () {
+          if (settled || !box.isConnected) return; settled = true; G.sfx("tap"); box.remove();
+          if (G.records) G.records.log({ kind: "choice", name: "", text: "▶ " + G.text(c.text, ctx) });
+          res(c);
+        };
       });
       // 세로 중앙 정렬 — 개수에 상관없이 화면 중앙(640)에 모으되, 상단바(75)와 대사창(top 1062) 사이를 벗어나지 않게
       G.nextFrame(function () {
@@ -463,13 +569,31 @@
     else if (name === "dim") { var d = l.querySelector(".fx-dim") || G.ui.el("div", "fx-dim", "", l); G.nextFrame(function () { d.style.opacity = .75; }); persistentFx.push(d); }
     else if (name === "undim") { vn.clearPersistentFx(); }
     else if (name === "magic") { G.sfx("magic"); var m = G.ui.imgEl("vfx/magic_panel", "", l); m.className = "fx-magic"; G.nextFrame(function () { m.style.opacity = .6; }); persistentFx.push(m); var lt = G.ui.imgEl("vfx/_0001_라이트-copy-복사-3", "left:0;top:480px;width:720px;opacity:.8", l); lt.className = "fx-light"; persistentFx.push(lt); }
+    // 문양의 빛(숨은 결말): 가장자리 여섯 빛이 차례로 떠오르고, orb_center 로 한가운데가 켜진다. 배경이 바뀔 때까지 남는다.
+    // 배경 층에 두어 인물 뒤에서 빛난다(인물 몸 위에 얼룩처럼 얹히지 않게).
+    else if (name === "orbs") {
+      // 사라지는 중인 예전 빛(undim·배경 전환)은 다시 쓰지 않는다 — 곧 지워지므로.
+      var ring = currentOrbs() || G.ui.el("div", "fx-orbs", "", G.ui.layer("bg"));
+      if (persistentFx.indexOf(ring) < 0) persistentFx.push(ring);
+      ring.innerHTML = ""; G.sfx("magic");
+      for (var oi = 0; oi < 6; oi++) {
+        var oa = -Math.PI / 2 + oi * Math.PI / 3;
+        G.ui.el("i", "fx-orb", "left:" + (50 + 31 * Math.cos(oa)).toFixed(2) + "%;top:" + (57 + 5.5 * Math.sin(oa)).toFixed(2) + "%;animation-delay:" + (oi * 0.25).toFixed(2) + "s," + (1 + oi * 0.25).toFixed(2) + "s", ring);
+      }
+    }
+    else if (name === "orb_center") {
+      var ring2 = currentOrbs() || G.ui.el("div", "fx-orbs", "", G.ui.layer("bg"));
+      if (persistentFx.indexOf(ring2) < 0) persistentFx.push(ring2);
+      G.ui.el("i", "fx-orb center", "left:50%;top:57%", ring2); G.sfx("magic");
+    }
     else if (name === "night") { var nd = G.ui.imgEl("gui/bg_night_dim01", "left:0;top:0;width:720px;height:1280px;opacity:0;transition:opacity 1s", l); G.nextFrame(function () { nd.style.opacity = 1; }); persistentFx.push(nd); }
   };
   vn.title = function (t, sub) {
     var l = G.ui.layer("popup"); var e = G.ui.el("div", "titlecard", "", l);
     var h = G.ui.el("h1", "", "", e); h.textContent = t; if (sub) { var p = G.ui.el("p", "", "", e); p.textContent = sub; }
     G.nextFrame(function () { e.style.opacity = 1; });
-    return G.wait(2200).then(function () { e.style.opacity = 0; return G.wait(650); }).then(function () { e.remove(); });
+    var fast = skipping();
+    return G.wait(fast ? 450 : 2200).then(function () { e.style.opacity = 0; return G.wait(fast ? 150 : 650); }).then(function () { e.remove(); });
   };
   vn.msg = function (from, text, ctx) {
     G.sfx("msg");
@@ -487,7 +611,28 @@
     G.ui.imgEl(from === "app" ? "gui/phone_icon" : "gui/alarm_icon", "", e).className = "ico";
     var f = G.ui.el("div", "from", "", e); f.textContent = name; var tm = G.ui.el("div", "time", "", e); tm.textContent = from === "app" ? "00:00" : "";
     var b = G.ui.el("div", "body", "", e); b.textContent = t;   // grid 2행 — 아이콘/발신자/시간과 겹치지 않음
-    return G.ui.tap("popup").then(function () { e.remove(); });
+    var key = "\u0003" + fromId + "\u0001" + t, seen = !!(G.records && G.records.isRead(key)), lineEpoch = skipEpoch;
+    var held = skipping() && !seen;
+    if (held && skipOn) { skipOn = false; syncQuick(); }
+    if (G.records) { G.records.markRead(key); G.records.log({ kind: "msg", name: "✉ " + name, color: from === "app" ? "#8ff0dd" : "", text: t }); }
+    return new Promise(function (res) {
+      var c = G.ui.el("div", "tapcatch", "", l), timer = null, finished = false, me;
+      function abandon() { finished = true; clearTimeout(timer); removeEventListener("keydown", kd); if (waiter === me) waiter = null; }
+      function plan() { clearTimeout(timer); timer = null; if (!finished && !c.isConnected) return abandon(); if (!finished && skipping() && !(held && lineEpoch === skipEpoch)) timer = setTimeout(function () { done(null, true); }, 160); }
+      function done(ev, byTimer) {
+        if (finished) return;
+        if (!c.isConnected) return abandon();
+        if (blocked()) { if (byTimer) timer = setTimeout(function () { done(null, true); }, 250); return; }
+        if (ev && ev.preventDefault) ev.preventDefault();
+        finished = true; clearTimeout(timer); c.remove(); removeEventListener("keydown", kd);
+        if (waiter === me) waiter = null;
+        res();
+      }
+      function kd(ev) { if (ev.key === " " || ev.key === "Enter") done(); }
+      c.addEventListener("pointerdown", function (ev) { done(ev); }); addEventListener("keydown", kd);
+      me = waiter = { poke: plan, alive: function () { return !finished && c.isConnected; } };
+      plan();
+    }).then(function () { e.remove(); });
   };
 
   // ---------- phone call UI ----------
@@ -512,7 +657,7 @@
     var style = document.getElementById("callstyle"); if (!style) { style = document.createElement("style"); style.id = "callstyle"; style.textContent = ".phone-screen .dlg{left:0;top:0;width:564px;height:304px}.phone-screen .dlg .dlg-bg{display:none}.phone-screen .dlg .dlg-name{left:0;top:0;width:564px;height:60px;line-height:60px;background:#b08968;border-radius:0;font-size:26px}.phone-screen .dlg .dlg-text{left:0;top:60px;width:564px;height:244px;background:#eee;color:#222;text-shadow:none;padding:18px 24px;box-sizing:border-box;font-size:26px}.phone-screen .dlg .dlg-next{color:#555}.phone-screen .dlg .dlg-text.think{color:#7a5a00}"; document.head.appendChild(style); }
     G.sfx("msg");
   };
-  vn.callEnd = function () { if (!callMode) return; clearInterval(callMode.timer); callMode.wrap.remove(); dlg = null; callMode = null; };
+  vn.callEnd = function () { if (!callMode) return; clearInterval(callMode.timer); callMode.wrap.remove(); removeQuick(); dlg = null; callMode = null; };
 
   // ---------- name prompt ----------
   vn.namePrompt = function () {
@@ -576,6 +721,7 @@
       while (i < steps.length) {
         var stepIndex = i, s = steps[i++];
         if (typeof s === "string") {
+          pendingLine = lineKey(id, s);
           await vn.say(null, G.text(s, ctx));
           if (G.studentEvents) await G.studentEvents.afterStep(id, stepIndex, ctx);
           continue;
@@ -597,7 +743,7 @@
         if (s.hideAll) vn.hideAll();
         if ("fx" in s) vn.fx(s.fx);
         if ("title" in s) { vn.hideDlg(); await vn.title(G.text(s.title, ctx), s.sub ? G.text(s.sub, ctx) : ""); }
-        if ("wait" in s) await G.wait(s.wait);
+        if ("wait" in s) await G.wait(skipping() ? Math.min(60, s.wait) : s.wait);
         if ("aff" in s) applyDelta(s.aff, "aff");
         if ("stat" in s) applyDelta(s.stat, "stat");
         if ("flag" in s) applyDelta(s.flag, "flag");
@@ -607,8 +753,9 @@
         if ("film" in s) { G.state.film = Math.max(0, G.state.film + s.film); }
         if ("unlock" in s) { if (s.unlock.spot) G.state.unlocks.spots[s.unlock.spot] = true; if (s.unlock.outfit) G.state.unlocks.outfits[s.unlock.outfit] = true; G.ui.toast("해금: " + (s.unlock.spot ? (cfg.dateSpots.filter(function (d) { return d.id === s.unlock.spot; })[0] || {}).name || s.unlock.spot : s.unlock.outfit)); }
         if ("route" in s) { G.state.route = s.route; G.ui.toast(G.charName(s.route) + " 루트 확정"); }
-        if ("app" in s) { if (G.hub && G.hub.appFx) await G.hub.appFx(s.app); }
-        if ("name" in s) { await vn.namePrompt(); }
+        // 앱 연출·이름 입력·미니게임·사진은 직접 보고 누르는 순간이라 넘기기를 멈춘다.
+        if ("app" in s) { vn.setSkip(false); if (G.hub && G.hub.appFx) await G.hub.appFx(s.app); }
+        if ("name" in s) { vn.setSkip(false); await vn.namePrompt(); }
         if ("msg" in s) { await vn.msg(s.msg.from, s.msg.text, ctx); }
         if ("phone" in s) {
           if (s.phone === "call") vn.callStart(s.who);
@@ -624,9 +771,12 @@
         // 앨범 원화(CG_CATALOG)는 등록처가 달라 앨범 뷰어로 연다.
         if (s.cg && G.gallery) { G.gallery.unlock(s.cg); await G.gallery.view(s.cg, { story: true }); }
         if ("get" in s) vn.acquire(s.get, ctx);
+        pendingLine = lineKey(id, s);
+        if (pendingLine) pendingLine += variantTag("think" in s && !("say" in s) && !("text" in s) ? s.think : s.text, ctx);
         if ("say" in s) { await vn.say(s.say, G.text(s.text, ctx), undefined, s); }
         if ("think" in s) { await vn.say("me", G.text(s.think, ctx), "think", s); }
         if ("text" in s && !("say" in s)) { await vn.say(null, G.text(s.text, ctx), undefined, s); }
+        pendingLine = null;
         if (s.wardrobeAfter) vn.outfit(s.wardrobeAfter.who || "$h", s.wardrobeAfter.outfit);
         if ("choice" in s) {
           var c = await vn.choice(s.choice, s.hint, ctx);
@@ -639,9 +789,9 @@
         if ("label" in s) { /* no-op */ }
         if ("jump" in s) jump(s.jump);
         if ("if" in s) { var ok = vn.evalExpr(s.if, ctx); if (ok && s.goto) jump(s.goto); else if (!ok && s.else) jump(s.else); }
-        if ("minigame" in s) { await vn.minigame(s, ctx); }
-        if ("nightschool" in s) { vn.hideDlg(); if (G.day && G.day.nightschool) await G.day.nightschool(s.nightschool, ctx); }
-        if ("photo" in s) { await vn.photoStep(s.photo, ctx); }
+        if ("minigame" in s) { vn.setSkip(false); await vn.minigame(s, ctx); }
+        if ("nightschool" in s) { vn.setSkip(false); vn.hideDlg(); if (G.day && G.day.nightschool) await G.day.nightschool(s.nightschool, ctx); }
+        if ("photo" in s) { vn.setSkip(false); await vn.photoStep(s.photo, ctx); }
         if ("scene" in s) {
           vn.hideDlg(); var childId = vn.expand(s.scene, ctx);
           if (G.studentEvents) await G.studentEvents.beforeScene(childId, ctx);
@@ -721,7 +871,8 @@
   // top-level: handles goto/end chains. resolves {type:"done"|"title"}
   vn.play = async function (id, ctx) {
     ctx = ctx || { h: G.ctx.h }; G.ctx = ctx;
-    G.ui.topbar(true);
+    // 숨은 결말처럼 달력 밖의 장은 위 막대(호감·필름·날짜)를 숨긴다.
+    G.ui.topbar(!ctx.noTopbar);
     var r = await vn.run(id, ctx);
     while (r.type === "goto") r = await vn.run(r.id, ctx);
     vn.hideDlg(); vn.callEnd();

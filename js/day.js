@@ -9,9 +9,28 @@
     G.ui.init();
     while (true) {
       var mode = await hub.title();
+      if (mode === "final") { await day.finalChapter(); continue; }
       if (mode === "new") { G.state = G.newState(); }
       await day.loop();
     }
+  };
+
+  // ---------- 숨은 결말 「눈 녹은 문양」 ----------
+  // 진짜 결말 여섯 개를 모두 보면 타이틀에서 열린다(클라나드의 빛의 구슬처럼). 고른 사람의 진짜 결말 1년 뒤
+  // 12월 24일 밤을 달력 밖의 한 장으로 보여 준다. 자동 저장은 건드리지 않는다.
+  day.finalChapter = async function () {
+    var h = G.records && G.records.pickSpring ? await G.records.pickSpring() : null;
+    if (!h) return;
+    var s = G.newState(), xmas = cfg.calendar.findIndex(function (d) { return d.special === "xmas_eve"; });
+    s.name = (G.records.lastName && G.records.lastName()) || s.name;
+    s.dayIdx = xmas >= 0 ? xmas : s.dayIdx; s.slot = "night";
+    s.route = h; s.appInstalled = true; s.appRevealed = true; s.appUninstalled = true;
+    s.aff[h] = 100; s.flags[h + "_met"] = true; s.flags["confessed_" + h] = true; s.flags.final_chapter = true;
+    G.state = s;
+    if (G.music && G.music.screen) G.music.screen("day", { season: "winter", slot: "night" });
+    vn.reset();
+    await vn.play("final_prologue", { h: h, noTopbar: true });
+    return day.gameEnd();
   };
 
   day.rollWeather = function () {
@@ -100,8 +119,11 @@
   day.gameEnd = async function () {
     if (!G.state.ending) G.state.ending = 'ending_normal';
     vn.reset(); G.ui.topbar(false);
+    // 크레딧 전에 적어 두어, 크레딧 도중 창을 닫아도 본 결말은 엔딩 목록에 남는다.
+    var record = G.records && G.records.recordEnding ? G.records.recordEnding(G.state.ending, G.state.route, G.state.name) : null;
     await hub.credits(G.state.ending || "ending_normal");
     try { var cleared = JSON.parse(localStorage.getItem("naesonan_cleared") || "[]"); cleared.push({ ending: G.state.ending, name: G.state.name }); localStorage.setItem("naesonan_cleared", JSON.stringify(cleared)); } catch (e) {}
+    if (record && G.records.endingCard) await G.records.endingCard(record);
     G.state = null;
   };
 
